@@ -1,0 +1,10 @@
+#selectTag{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#selectLabel{
+    margin-right: 315px;
+    white-space: nowrap;
+}

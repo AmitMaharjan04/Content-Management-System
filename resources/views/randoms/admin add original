@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="admin.js">
+    </script>
+    <title>{{$title}}</title>
+</head>
+<header>
+    <a href="{{url('/')}}/dashboard" >
+        <h1>Home</h1>
+    </a>
+    <a href="{{url('/')}}/add" >
+        <h1>Add</h1>
+    </a>
+</header>
+<body>
+    {{-- <form action="{{$url}}" method="post"> --}}
+      {!! Form::open([
+        'url'=> $url,
+        'method' => "post"
+      ])!!}
+        @csrf
+            <div>
+          {!! Form::label('','Name')!!}
+          {!! Form::text('name',$customer->name,[
+            'placeholder'=> 'enter your name'
+        ])!!}
+          {{-- <label for="" class="form-label">Name</label>
+          <input type="text" class="form-control" name="name" id="" value="{{$customer->name}}" placeholder="enter the name"></br> --}}
+          <span class="text-danger">
+            @error('name')
+            {{ $message }}
+            @enderror
+        </span>
+        </div>
+        <div>
+          {!! Form::label('','Email')!!}
+          {!! Form::email('email',$customer->email,[
+              'placeholder'=> 'abc@gmail.com'
+          ])!!}
+          {{-- <label for="" class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" id="" value="{{$customer->email}}" placeholder="abc@mail.com"></br> --}}
+          <span class="text-danger">
+            @error('email')
+            {{ $message }}
+            @enderror
+        </span>
+        </div>
+        <div>
+          {{-- <p>Gender:</p> --}}
+        {!! Form::label('','Gender: ') !!}<br>
+        {!! Form::label('','Male ') !!}
+        {!! Form::radio('gender','M',$customer->gender == "M" ? "true" : "")!!} <br>
+        {!! Form::label('','Female ') !!}
+        {!! Form::radio('gender','F',$customer->gender == "F" ? "true" : "")!!} <br> 
+        {!! Form::label('','Others ') !!}
+        {!! Form::radio('gender','O',$customer->gender == "O" ? "true" : "")!!}                                                                                                                                                                                                                                                                                                                                                                                                                                            
+        {{-- <input type="radio" id="" name="gender" checked="checked" value="M" {{$customer->gender == "M" ? "checked" : ""}}>
+        <label for="">Male</label><br>
+        <input type="radio" id="" name="gender" value="F" {{$customer->gender == "F" ? "checked" : ""}}>
+        <label for="">Female</label><br>
+        <input type="radio" id="" name="gender" value="O" {{$customer->gender == "O" ? "checked" : ""}}>
+        <label for="">Others</label></br> --}}
+        <span class="text-danger">
+            @error('gender')
+            {{ $message }}
+            @enderror
+        </span>
+        </div>
+        <div>
+          {!! Form::label('','Address')!!}
+          {!! Form::text('address',$customer->address)!!}
+          {{-- <label for="" class="form-label">Address</label>
+          <input type="text" class="form-control" value="{{$customer->address}}" name="address" id="" ></br> --}}
+          <span class="text-danger">
+            @error('address')
+            {{ $message }}
+            @enderror
+        </span>
+        </div>
+          {!! Form::submit('Submit')!!}
+          {{-- <input type="submit" value="submit" > --}}
+    {{-- </form> --}}
+      {!! Form::close()!!}
+</body>
+</html>
+

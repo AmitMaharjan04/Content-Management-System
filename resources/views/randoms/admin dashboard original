@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="admin.css">
+    <title>Dashboard</title>
+</head>
+    <div class="header1">
+        <header>
+            <a href="{{url('/')}}/dashboard" >
+                <h1>Home</h1>
+            </a>
+            <a href="{{url('/')}}/add" >
+                <h1>Add</h1>
+            </a>
+            <a href="{{url('/')}}/trash" >
+                <h1>Go to trash</h1>
+            </a>
+        </header>
+    </div>
+<body>
+    <div class="table-responsive">
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                        <th scope="col">Name</td>
+                        <th scope="col">Gender</td>
+                        <th scope="col">Address</td>
+                        <th scope="col">Email</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($customer as $customer)
+                <tr class="">
+                    <th scope="col">{{$customer->name}}</th>
+                    <th scope="col">
+                            @if ($customer->gender == 'M')
+                                Male
+                            @elseif ($customer->gender =='F')
+                                Female
+                            @else
+                                Others
+                            @endif
+                    </th>
+                    <th scope="col">{{$customer->address}}</th>
+                    <th scope="col">{{$customer->email}}</th>
+                    <th scope="col"> 
+                        <a href="{{url('/edit')}}/{{$customer->id}}">Edit
+                        </a></th>
+                    <th scope="col">
+                        <a href="{{route('customer.delete',['id'=> $customer->id])}}">Trash
+                        </a></th>
+                     
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+    <footer>
+    </footer>
+</html>
