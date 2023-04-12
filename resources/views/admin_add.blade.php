@@ -31,7 +31,7 @@
             </div>
         </nav>
     </header>
-    <main class="offset-3 row row-cols-2 mt-4">
+    <main class="offset-4 row row-cols-2 mt-4">
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -57,7 +57,7 @@
                     'id' => 'name',
                 ]) !!}
                 {{-- <input type="text" name="name"  class="form-control" id="" placeholder="Enter your name" value="{{$customer->name}}"> --}}
-                <div class="alert alert-danger"  id="errorName" hidden></div>
+                <div class="alert alert-danger" id="errorName" hidden></div>
                 @if ($errors->has('name'))
                     @foreach ($errors->get('name') as $error)
                         <div class="alert alert-danger">{{ $error }}</div>
@@ -74,19 +74,19 @@
                     'class' => 'form-control',
                     'id' => 'email',
                 ]) !!}
-                <div class="alert alert-danger"  id="errorEmail" hidden></div>
-                    @if ($errors->has('email'))
-                        <div class="alert alert-danger">
-                            {{ $errors->first('email') }}
-                        </div>
-                    @endif
+                <div class="alert alert-danger" id="errorEmail" hidden></div>
+                @if ($errors->has('email'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
             </div>
         </div>
         <fieldset class="form-group mb-3">
             <div class="row">
-                {!! Form::label('','Gender',[
-                'class'=>'col-form-label col-sm-2 pt-0'
-              ]) !!}
+                {!! Form::label('', 'Gender', [
+                    'class' => 'col-form-label col-sm-2 pt-0',
+                ]) !!}
                 <div class="col-sm-10">
                     <div class="form-check">
                         {{-- {!! Form::radio('gender','M',$customer->gender == "M" ? "true" : "",[
@@ -128,12 +128,12 @@
                     'class' => 'form-control',
                     'id' => 'address',
                 ]) !!}`
-                <div class="alert alert-danger"  id="errorAddress" hidden></div>
+                <div class="alert alert-danger" id="errorAddress" hidden></div>
                 @if ($errors->has('address'))
-                <div class="alert alert-danger">
-                    {{ $errors->first('address') }}
-                </div>
-            @endif
+                    <div class="alert alert-danger">
+                        {{ $errors->first('address') }}
+                    </div>
+                @endif
             </div>
         </div>
         <div class="form-group row mb-3">
@@ -186,8 +186,8 @@
                 ]) !!}
                 {!! Form::label('', 'Others', ['class' => 'form-check-label']) !!}
             </div>
-                <div class="alert alert-danger"  id="errorHobby" hidden></div>
-                @if ($errors->has('hobby'))
+            <div class="alert alert-danger" id="errorHobby" hidden></div>
+            @if ($errors->has('hobby'))
                 <div class="alert alert-danger">
                     {{ $errors->first('hobby') }}
                 </div>
@@ -206,12 +206,12 @@
                 'style' => 'resize:none',
                 'id' => 'description',
             ]) !!}
-            <div class="alert alert-danger"  id="errorDescription" hidden></div>
-                @error('description')
+            <div class="alert alert-danger" id="errorDescription" hidden></div>
+            @error('description')
                 <div class="alert alert-danger">
                     {{ $message }}
                 </div>
-                @enderror
+            @enderror
         </div>
         <div class="form-group row mb-3">
             <div class="col-sm-10">
@@ -219,7 +219,6 @@
             </div>
         </div>
         {{ Form::close() }}
-        {{-- </form> --}}
     </main>
     <footer>
         <!-- place footer here -->

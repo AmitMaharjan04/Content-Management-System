@@ -18,9 +18,9 @@
     </header>
     <main>
         <label class="label-register">Register</label>
-        <form class="main-form" action="{{ url('/register') }}" method="post" id="formRegister">
+        <form class="main-form " action="{{ url('/register') }}" method="post" id="formRegister">
             @csrf
-            <div class="form-section">
+            {{-- <div class="form-section">
                 <label for="" class="name">Name</label>
                 <input type="text" name="name" class="name" id="name" value="{{ old('name') }}" required>
                 <div class="alert alert-danger" id="errorName" hidden></div>
@@ -29,8 +29,8 @@
                         {{ $message }}
                     </div>
                 @enderror
-            </div>
-            <div class="form-section">
+            </div> --}}
+            <div class="form-section mt-4">
                 <label for="" class="email">Email address</label>
                 <input type="email" name="email" class="email" id="email" placeholder="email@example.com"
                     value="{{ old('email') }}" required>
@@ -46,7 +46,7 @@
                     </div>
                 @endif
             </div>
-            <div class="form-section">
+            <div class="form-section mt-4">
                 <label for="" class="password">Password</label>
                 <input type="password" name="password" class="password" id="password" required>
                 <div class="alert alert-danger" id="errorPassword" hidden></div>
@@ -56,9 +56,14 @@
                     </div>
                 @enderror
             </div>
-            <input type="submit" class="btn" value="Register">
+            <div class="mt-4">
+                <input type="submit" class="btn btn-primary" value="Register">
+            </div>
+            <div class="mt-3">
+                <a class="color-white" href="{{ url('/')}}" >Got an account? Click here for login</a>
+            </div>
         </form>
-
+        </div>
     </main>
     <footer>
         <!-- place footer here -->

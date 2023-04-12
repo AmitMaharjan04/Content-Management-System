@@ -2,25 +2,25 @@ $(document).ready(function() {
     $('#formRegister').submit(function(event) {
         event.preventDefault();
 
-        $('#errorName').html('');
-        $('#errorName').hide();
+        // $('#errorName').html('');
+        // $('#errorName').hide();
         $('#errorEmail').html('');
         $('#errorEmail').hide();
         $('#errorPassword').html('');
         $('#errorPassword').hide();
 
         // Perform form validation here
-        var name = $('#name').val();
+        // var name = $('#name').val();
         var email = $('#email').val();
         var password = $('#password').val();
         let emailRegex= /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         let passRegex= /^[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}$/;
-        if (name === '') {
-            $('#errorName').removeAttr('hidden');
-            $('#errorName').show();
-            $('#errorName').html('Please enter your name');
-            return false;
-        }
+        // if (name === '') {
+        //     $('#errorName').removeAttr('hidden');
+        //     $('#errorName').show();
+        //     $('#errorName').html('Please enter your name');
+        //     return false;
+        // }
         if (email === '') {
             $('#errorEmail').removeAttr('hidden');
             $('#errorEmail').show();
@@ -34,13 +34,13 @@ $(document).ready(function() {
             $('#errorPassword').html('Please enter your password');
             return false;
         }
-        if(name.length<3 || name.length>30){
-            $('#errorName').removeAttr('hidden');
-            $('#errorName').show();
-            $('#errorName').html('Please enter name between 3-30');
-            console.log("name short");
-            return false;
-        }
+        // if(name.length<3 || name.length>30){
+        //     $('#errorName').removeAttr('hidden');
+        //     $('#errorName').show();
+        //     $('#errorName').html('Please enter name between 3-30');
+        //     console.log("name short");
+        //     return false;
+        // }
         if(!emailRegex.test(email)){
             $('#errorEmail').removeAttr('hidden');
             $('#errorEmail').show();

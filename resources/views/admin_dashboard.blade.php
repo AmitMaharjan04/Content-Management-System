@@ -192,7 +192,7 @@
                     <div class="mb-3 col-1">
                         <input type="submit" class="btn btn-success" value="Import">
                     </div>
-                    <div class="mb-3 col-3 alert alert-danger" id="msg" hidden>
+                    <div class="mb-3 col-2 alert alert-danger text-center" id="msg" hidden>
                     </div>
                 </div>
             </form>

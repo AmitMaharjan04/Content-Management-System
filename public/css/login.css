@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(165, 133, 133);
+    background-color: rgb(209, 162, 156);
     height: 100%;
 }
 .main{
@@ -16,7 +16,7 @@ body{
     font-style:italic;
 }
 .main-form{
-    margin: 10px 30px 30px 30px;
+    margin: 10px 30px 30px 45px;
 }
 .form-section{
     padding: 5px 15px 15px 15px;
@@ -69,7 +69,3 @@ body{
     transition: 1s;
     background-color: rgb(13, 62, 197);
 } */
-.formerror-pass, .formerror-email, .formerror{
-   margin-top: 15px;
-	color:red;
-}

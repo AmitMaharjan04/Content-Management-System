@@ -68,7 +68,6 @@ class AdminController extends Controller
         // $admin->email = $request->email;
         // $admin->password = Hash::make($request->password);
         // $admin->save();
-
         $request->validate([
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
             'password' => ['required ','min:5', ' max:30','regex:/[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}/']
@@ -79,9 +78,11 @@ class AdminController extends Controller
         $emails = $request->email;
         // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
         $admin = new AdminLogin();
-        $emailCheck=User::select('email')->get();
+        dump("here");
+        $emailCheck=AdminLogin::select('email')->get();
         foreach($emailCheck as $email){
             if($email->email==$emails){
+                dump("inside");
                 return redirect()->back()->with('email','Email already registered.');
             }
         }

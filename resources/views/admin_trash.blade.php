@@ -85,8 +85,6 @@
                             <td scope="col" class="text-nowrap">
                                 <a class="me-1 restore" href="{{ url('/restore') }}/{{ $customer->id }}">Restore
                                 </a>
-                            {{-- </td>
-                            <td scope="col"> --}}
                                 <a class="delete" href="{{ route('customer.deleteForced', ['id' => $customer->id]) }}" id="delete">Delete
                                 </a>
                             </td>

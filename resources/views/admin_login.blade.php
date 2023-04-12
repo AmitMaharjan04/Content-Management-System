@@ -22,7 +22,7 @@
             {{-- <form class="px-4 py-3 " action="{{url('/')}}" method="post" id="formLogin"> --}}
             <form class="main-form " action="{{ url('/') }}" method="post" id="formLogin">
                 @csrf
-                <div class="form-section">
+                <div class="form-section mt-4">
                     <label for="" class="label-email">Email address</label>
                     <input type="email" name="email" class="form-section-email" id="email1"
                         placeholder="email@example.com" value={{ old('email') }}>
@@ -33,7 +33,7 @@
                         </div>
                     @endif
                 </div>
-                <div class="form-section">
+                <div class="form-section mt-4">
                     <label for="" class="label-password">Password</label>
                     <input type="password" name="password" class="form-section-password" id="password1">
                     <div class="alert alert-danger" id="errorPassword" hidden></div>
@@ -43,9 +43,9 @@
                         </div>
                     @endif
                 </div>
-                <div class="buttons">
-                    <input type="submit" class="btn" value="Login">
-                    <a href="{{ url('/') }}/register" class="btn2">
+                <div class="buttons mt-4">
+                    <input type="submit" class="btn btn-primary" value="Login">
+                    <a href="{{ url('/') }}/register" class="btn btn2 btn-primary">
                         Register
                     </a>
                 </div>
@@ -58,7 +58,7 @@
             <div class="col-4"></div>
             <div class="col-5">
                 @if (session()->has('error'))
-                    <div class="alert alert-danger col-8 d-flex  justify-content-center" id="error">
+                    <div class="alert alert-danger ms-4 col-8 d-flex  justify-content-center" id="error">
                         {{ session('error') }}
                         <script>
                             var errorDiv = document.getElementById("error");
@@ -69,7 +69,7 @@
                     </div>
                 @endif
                 @if (session()->has('success'))
-                    <div class="alert alert-success col-8 d-flex  justify-content-center" id="registered">
+                    <div class="alert alert-success col-8 d-flex ms-4 justify-content-center" id="registered">
                         {{ session('success') }}
                         <script>
                             var errorDiv = document.getElementById("registered");
@@ -80,7 +80,7 @@
                     </div>
                 @endif
                 @if (session()->has('unauthorized'))
-                    <div class="alert alert-danger col-8 d-flex  justify-content-center" id="unauthorized">
+                    <div class="alert alert-danger col-8 d-flex ms-4 justify-content-center" id="unauthorized">
                         {{ session('unauthorized') }}
                         <script>
                             var errorDiv = document.getElementById("unauthorized");

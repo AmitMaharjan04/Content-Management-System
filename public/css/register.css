@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(165, 133, 133);
+    background-color: rgb(209, 162, 156);
     height: 100%;
 }
 main{
@@ -16,20 +16,23 @@ main{
     font-style:italic;
 }
 .main-form{
-    margin: 10px 30px 30px 30px;
+    margin: 10px 30px 30px 65px;
 }
 .form-section{
     padding: 5px 15px 15px 15px;
     display:flex;
     flex-direction: column;
 }
-.name,.email, .password{
+.name,.email, .password{    
     width: 200px;
     height: 40px;
     border-radius: 5px;
     border:none;
     font-family: Arial;
     padding-left: 10px;
+}
+.email{
+    size: 100px;
 }
 .email, .password, .name{
     font-weight: 500;
@@ -49,8 +52,3 @@ main{
     cursor: pointer;
 
 }
-.formerror-pass, .formerror-email, .formerror-name{
-    margin-top: 15px;
-     color:red;
-     font-size: 18px;
- }
