@@ -19,45 +19,42 @@
     <main>
         <label class="label-register">Register</label>
         <form class="main-form" action="{{ url('/register') }}" method="post" id="formRegister">
-            {{-- <form id="myForm"> --}}
             @csrf
             <div class="form-section">
                 <label for="" class="name">Name</label>
-                <input type="text" name="name" class="name" id="name" value="{{old('name')}}" required>
-                <div class="alert alert-danger"  id="errorName" hidden></div>
-                    @error('name')
+                <input type="text" name="name" class="name" id="name" value="{{ old('name') }}" required>
+                <div class="alert alert-danger" id="errorName" hidden></div>
+                @error('name')
                     <div class="alert alert-danger">
                         {{ $message }}
                     </div>
-                    @enderror
+                @enderror
             </div>
             <div class="form-section">
                 <label for="" class="email">Email address</label>
                 <input type="email" name="email" class="email" id="email" placeholder="email@example.com"
-                value="{{old('email')}}"  required>
-                <div class="alert alert-danger"  id="errorEmail" hidden></div>
-                    @error('email')
+                    value="{{ old('email') }}" required>
+                <div class="alert alert-danger" id="errorEmail" hidden></div>
+                @error('email')
                     <div class="alert alert-danger">
                         {{ $message }}
                     </div>
-                    @enderror
-                    @if (session()->has('email'))
+                @enderror
+                @if (session()->has('email'))
                     <div class="alert alert-danger">
                         {{ session('email') }}
                     </div>
-                        
-                    
                 @endif
             </div>
             <div class="form-section">
                 <label for="" class="password">Password</label>
                 <input type="password" name="password" class="password" id="password" required>
-                <div class="alert alert-danger"  id="errorPassword" hidden></div>
-                    @error('password')
+                <div class="alert alert-danger" id="errorPassword" hidden></div>
+                @error('password')
                     <div class="alert alert-danger">
                         {{ $message }}
                     </div>
-                    @enderror
+                @enderror
             </div>
             <input type="submit" class="btn" value="Register">
         </form>

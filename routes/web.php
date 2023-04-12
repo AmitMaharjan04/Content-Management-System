@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 //     return view('welcome');
 // });
 
+// from the youtube video
 Route::get('/customer', [CustomerController::class, 'index']);
 Route::post('/customer', [CustomerController::class, 'store']);
 Route::get('/customer/view', [CustomerController::class, 'view']);
@@ -30,9 +32,11 @@ Route::get('/customer/update/{id}', [CustomerController::class, 'update'])->name
 Route::post('/customer/update/{id}', [CustomerController::class, 'realUpdate'])->name('customer.update');
 Route::get('/customer/trash', [CustomerController::class, 'trash']);
 
+//actual URLS of my project
 
-// Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('main.dashboard');
+Route::middleware(['custom'])->group(function () {
+
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
         Route::post('/add', [AdminController::class, 'store']);
         Route::get('/add/{id?}', [AdminController::class, 'add']);
         Route::post('/add/{id?}', [AdminController::class, 'editStore']);
@@ -45,8 +49,8 @@ Route::get('/customer/trash', [CustomerController::class, 'trash']);
         Route::get('/excel', [AdminController::class, 'export'])->name('excel.export');
         Route::post('/excelImport', [AdminController::class, 'import'])->name('excel.import');
         Route::get('/logout', [AdminController::class, 'logout']);
-// });
-Route::get('/', [AdminController::class, 'index']);
+});
+Route::get('/', [AdminController::class, 'index'])->name('login');
 Route::post('/', [AdminController::class, 'login']);
 Route::get('/register', [AdminController::class, 'register']);
 Route::post('/register', [AdminController::class, 'registerStore']);

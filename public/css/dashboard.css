@@ -1,46 +1,6 @@
-body{
-    background-color: rgba(255, 244, 229, 0.863);
+.table_1{
+    word-break: break-all;
 }
-/* .nav-item a{
-    display: flex;
-    justify-content: right;
-    align-items: right;
-} */
-
-.header{
-    margin-bottom: 50px;
+.file,.edit,.delete{
+    text-decoration: none;
 }
-
-.table{
-    margin-top:25px;
-    margin-left:75px;
-    border-collapse:collapse;
-    width:80%;
-    
-}
-.excel{
-    margin-top: 10px;
-    margin-left: 80px;
-}
-.logout{
-    display: block;
-    align-items: right;
-    background-color: red;
-}
-.wrap{
-    word-wrap: break-word;
-}
-.success{
-    display: flex;
-    flex-direction: row;
-    align-items:center ;
-    vertical-align: center;
-}
-/* .table-row{
-    display: flex;
-    
-} */
-
-/* .table-td{
-    width:150px; */
-/* } */

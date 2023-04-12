@@ -32,12 +32,14 @@
         </nav>
     </header>
     <main class="offset-3 row row-cols-2 mt-4">
-        {{-- {!! Form::model($customer, array('url' => $url,
-      'method' => 'post',
-      'enctype'=>'multipart/form-data',)) !!} --}}
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
+            </div>
+        @endif
+        @if (session('aerror'))
+            <div class="alert alert-danger">
+                {{ session('aerror') }}
             </div>
         @endif
         {!! Form::open([
@@ -82,17 +84,15 @@
         </div>
         <fieldset class="form-group mb-3">
             <div class="row">
-                <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-                {{-- {!! Form::label('','Gender',[
+                {!! Form::label('','Gender',[
                 'class'=>'col-form-label col-sm-2 pt-0'
-              ]) !!} --}}
+              ]) !!}
                 <div class="col-sm-10">
                     <div class="form-check">
                         {{-- {!! Form::radio('gender','M',$customer->gender == "M" ? "true" : "",[
           'class'=>'form-check-input'
           ])!!} <br>
         {!! Form::label('','Male',['class'=>'form-check-label']) !!} --}}
-
                         {{-- {!! Form::label('','Female ') !!}
         {!! Form::radio('gender','F',$customer->gender == "F" ? "true" : "")!!} <br> 
         {!! Form::label('','Others ') !!}
@@ -127,7 +127,7 @@
                 {!! Form::text('address', $customer->address, [
                     'class' => 'form-control',
                     'id' => 'address',
-                ]) !!}
+                ]) !!}`
                 <div class="alert alert-danger"  id="errorAddress" hidden></div>
                 @if ($errors->has('address'))
                 <div class="alert alert-danger">
@@ -137,8 +137,8 @@
             </div>
         </div>
         <div class="form-group row mb-3">
-            <div class="col" id="selectTag">
-                {!! Form::label('', 'Blood Group', ['class' => 'form-label', 'id' => 'selectLabel']) !!}
+            <div class="col" id="bloodgroup">
+                {!! Form::label('', 'Blood Group', ['class' => 'form-label', 'id' => 'bloodLabel']) !!}
                 <select name="blood" class="form-select" aria-label="Default select example">
                     <option selected {{ $customer->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
                     <option {{ $customer->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
@@ -155,24 +155,9 @@
             @php
                 $hobbies = $customer->hobbies;
                 $hobby = explode(',', $hobbies);
-                // dump($hobby);
-                // if(in_array("cricket",$hobby)){
-                //     dd("true");
-                // }else{
-                //     dd("false");
-                // }
-                // dd(gettype($hobby));
             @endphp
             {!! Form::label('', 'Select your hobbies', ['class' => 'form-label']) !!}
             <div class="form-check col-3 ms-5 mb-2">
-
-                {{-- <input type="checkbox" id="" name="hobby[]" value="football" 
-                @if (in_array('football', $hobby))
-                  checked {{$in_array("football",$customer->hobby)==true? "checked":""}},
-                  {{$in_array("cricket",$customer->hobby)==true? "checked":""}},
-                  {{$in_array("others",$customer->hobby)==true? "checked":""}},
-                @endif
-                > --}}
                 {!! Form::checkbox('hobby[]', 'football', in_array('football', $hobby) ? 'true' : '', [
                     'class' => 'form-check-input hobby',
                 ]) !!}
@@ -181,9 +166,6 @@
             <div class="form-check col-3 ms-4">
                 <input type="checkbox" id="" name="hobby[]" class="form-check-input  hobby" value='cricket'
                     {{ in_array('cricket', $hobby) ? 'checked' : '' }}>
-                {{-- @if (in_array('cricket', $hobby)) checked @endif> --}}
-                {{-- {!! Form::checkbox('hobby[]', {{in_array("cricket",$hobby)? 'checked':''}},
-                 ['class' => 'form-check-input']) !!} --}}
                 {!! Form::label('', 'Cricket', ['class' => 'form-check-label']) !!}
             </div>
             <div class="form-check col-4">
@@ -202,13 +184,6 @@
                 {!! Form::checkbox('hobby[]', 'others', in_array('others', $hobby) ? 'true' : '', [
                     'class' => 'form-check-input  hobby',
                 ]) !!}
-                {{-- @if (isset($customer))
-                    {!! Form::checkbox('hobby[]', 'others', in_array('others', $hobby) ? 'true' : null, [
-                        'class' => 'form-check-input',
-                    ]) !!}
-                @else
-                    {!! Form::checkbox('hobby[]', 'others', true, ['class' => 'form-check-input']) !!}
-                @endif --}}
                 {!! Form::label('', 'Others', ['class' => 'form-check-label']) !!}
             </div>
                 <div class="alert alert-danger"  id="errorHobby" hidden></div>
@@ -218,10 +193,8 @@
                 </div>
             @endif
         </div>
-
-
         <div class="form-group row mb-3">
-            {!! Form::label('', 'Drop your file', ['class' => 'form-label']) !!}
+            {!! Form::label('', 'Drop your file / image', ['class' => 'form-label']) !!}
             {!! Form::file('file', ['class' => 'form-control']) !!}
         </div>
         <div class="form-group row mb-3">
@@ -239,11 +212,6 @@
                     {{ $message }}
                 </div>
                 @enderror
-                {{-- @if ($errors->has('address'))
-                <div class="alert alert-danger">
-                    {{ $errors->first('address') }}
-                </div>
-            @endif --}}
         </div>
         <div class="form-group row mb-3">
             <div class="col-sm-10">

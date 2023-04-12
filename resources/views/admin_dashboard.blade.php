@@ -10,17 +10,15 @@
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    {{-- <link rel="stylesheet" href="css/dashboard.css"> --}}
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
-<body>
+<body class="overflow-x-hidden">
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            {{-- <a class="navbar-brand" href="#">Random</a> --}}
             <div class="image">
                 <img src="photos/11.jpeg" width="50"class="img-fluid rounded" alt="Responsive image">
             </div>
-            {{-- <img src="11.jpeg" alt="Image" width="30" height="24"> --}}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -44,16 +42,9 @@
             </div>
         </nav>
     </header>
-    <main class="mt-4">
-        {{-- <div class="col-2">
-        </div> --}}
-        {{-- col-8 --}}
-        {{-- <div class="row"> --}}
-        {{-- <div class="col-1">
-            </div> --}}
-        {{-- <div class="col-12 ms-3 me-3"> --}}
+    <main class="mt-4 ">
         <div class="row">
-            <div class="col-3"></div>
+            <div class="col-4"></div>
             <div class="col-6">
                 @if (session()->has('success'))
                     <div class="alert alert-success col-8 d-flex  justify-content-center" id="success">
@@ -133,34 +124,29 @@
                     </div>
                 @endif
             </div>
-            <div class="col-3"></div>
-        </div>
-        {{-- recent --}}
-        <div class="row">
             <div class="col-2"></div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered col-8 ">
+        </div>
+        <div class="row">
+            <div class="col mx-4">
+                <table class="table table-hover table-responsive table-bordered  table_1">
                     <thead class="thead-dark">
-                        {{-- <div class="table-row> --}}
                         <tr>
-                            <th class="col text-wrap" scope="col">Name</th>
-                            <th class="col text-wrap" scope="col">Gender</th>
-                            <th class="col text-wrap" scope="col" class="table-td">Email</th>
-                            <th class="col text-wrap" scope="col" class="table-td">Address</th>
-                            <th class="col text-wrap" scope="col" class="table-td">Blood Group</th>
-                            <th class="col text-wrap" scope="col" class="table-td">Hobbies</th>
-                            <th class="col text-wrap" scope="col" class="table-td">Description</th>
-                            <th class="col text-wrap" scope="col" class="table-td">File</th>
-                            <th scope="col text-wrap"></th>
-                            <th scope="col text-wrap"></th>
+                            <th class="text-nowrap text-center" scope="">Name</th>
+                            <th class="text-nowrap text-center" scope="">Gender</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">Email</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">Address</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">Blood Group</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">Hobbies</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">Description</th>
+                            <th class="text-nowrap text-center" scope="" class="table-td">File</th>
+                            <th scope="text-wrap"></th>
                         </tr>
-                        {{-- </div> --}}
                     </thead>
                     <tbody>
                         @foreach ($customer as $customer)
                             <tr>
-                                <th class="text-wrap col-2" scope="row">{{ $customer->name }}</th>
-                                <td>
+                                <td class="text-nowrap text-center" scope="row">{{ $customer->name }}</td>
+                                <td class="text-nowrap text-center">
                                     @if ($customer->gender == 'M')
                                         Male
                                     @elseif ($customer->gender == 'F')
@@ -169,48 +155,48 @@
                                         Others
                                     @endif
                                 </td>
-                                <td class="text-wrap col">{{ $customer->email }}</td>
-                                <td class="text-wrap col">{{ $customer->address }}</td>
-                                <td class="text-wrap col">{{ $customer->blood_group }}</td>
-                                <td class="text-wrap col">{{ $customer->hobbies }}</td>
-                                <td class="text-wrap col">{{ $customer->description }}</td>
-                                <td class="text-wrap col"><a href="{{ $customer->file }}" target="_blank">View file</a>
+                                <td class="text-nowrap text-center">{{ $customer->email }}</td>
+                                <td class="text-wrap">{{ $customer->address }}</td>
+                                <td class="text-nowrap text-center">{{ $customer->blood_group }}</td>
+                                <td class="text-nowrap text-center">{{ $customer->hobbies }}</td>
+                                <td class="text-wrap">{{ $customer->description }}</td>
+                                <td class="text-nowrap">
+                                    <a class="file" href="{{ $customer->file }}" target="_blank">View
+                                        file
+                                    </a>
                                 </td>
-                                <th scope="col">
-                                    {{-- <a href="{{url('/edit')}}/{{$customer->id}}">Edit --}}
-                                    <a href="{{ url('/add') }}/{{ $customer->id }}">Edit
+                                <td scope="col" class="text-nowrap">
+                                    <a class="me-3 edit" href="{{ url('/add') }}/{{ $customer->id }}">Edit
                                     </a>
-                                </th>
-                                <th scope="col">
-                                    <a href="{{ route('customer.delete', ['id' => $customer->id]) }}">Trash
+                                    <a class="delete"
+                                        href="{{ route('customer.delete', ['id' => $customer->id]) }}">Trash
                                     </a>
-                                </th>
+                                </td>
                             </tr>
                         @endforeach
 
                     </tbody>
                 </table>
             </div>
-                <div class="col-2"></div>
-            </div>
-            <div class="excel mb-3 ms-3">
-                <a href="{{ route('excel.export') }}" class="btn btn-success">Export to Excel</a>
-            </div>
-            <div class="excel ms-3">
-                <form action="{{ route('excel.import') }}" id="import" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row">
-                        <div class="mb-3 col-3">
-                            <input class="form-control" name="file" type="file" id="formFile" >
-                        </div>
-                        <div class="mb-3 col-1">
-                            <input type="submit" class="btn btn-success" value="Import" >
-                        </div>
-                        <div class="mb-3 col-3 alert alert-danger" id="msg" hidden>
-                        </div> 
+        </div>
+        <div class="excel mb-3 ms-3">
+            <a href="{{ route('excel.export') }}" class="btn btn-success">Export to Excel</a>
+        </div>
+        <div class="excel ms-3">
+            <form action="{{ route('excel.import') }}" id="import" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="mb-3 col-3">
+                        <input class="form-control" name="file" type="file" id="formFile">
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3 col-1">
+                        <input type="submit" class="btn btn-success" value="Import">
+                    </div>
+                    <div class="mb-3 col-3 alert alert-danger" id="msg" hidden>
+                    </div>
+                </div>
+            </form>
+        </div>
         </div>
         <div class="col-2">
         </div>

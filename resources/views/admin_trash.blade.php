@@ -10,13 +10,12 @@
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-
+    <link href="{{ asset('css/trash.css')}}" rel="stylesheet">
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            {{-- <a class="navbar-brand" href="#">Random</a> --}}
             <div class="image">
                 <img src="photos/11.jpeg" width="50"class="img-fluid rounded" alt="Responsive image">
             </div>
@@ -34,30 +33,28 @@
             </div>
         </nav>
     </header>
-    <main class="row mt-4">
-        <div class="col-2">
-        </div>
-        <div class="col-8">
-            <table class="table table-hover table-bordered">
+    <main class="mt-4">
+        <div class="row">
+        <div class="col mx-4">
+            <table class="table table-hover table-bordered table_1">
                 <thead class="thead-dark">
                     <tr>
-                        <th class="col" scope="col">Name</th>
-                        <th class="col" scope="col">Gender</th>
-                        <th class="col" scope="col" class="table-td">Email</th>
-                        <th class="col" scope="col" class="table-td">Address</th>
-                        <th class="col" scope="col" class="table-td">Blood Group</th>
-                        <th class="col" scope="col" class="table-td">Hobbies</th>
-                        <th class="col" scope="col" class="table-td">Description</th>
-                        <th class="col" scope="col" class="table-td">File</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
+                        <th class="text-nowrap text-center" scope="col">Name</th>
+                        <th class="text-nowrap text-center" scope="col">Gender</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">Email</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">Address</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">Blood Group</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">Hobbies</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">Description</th>
+                        <th class="text-nowrap text-center" scope="col" class="table-td">File</th>
+                        <th scope="text-wrap"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($customer as $customer)
                         <tr>
-                            <th scope="row">{{ $customer->name }}</th>
-                            <td>
+                            <td class="text-nowrap text-center">{{ $customer->name }}</td>
+                            <td class="text-nowrap text-center">
                                 @if ($customer->gender == 'M')
                                     Male
                                 @elseif ($customer->gender == 'F')
@@ -66,13 +63,13 @@
                                     Others
                                 @endif
                             </td>
-                            <td>{{ $customer->email }}</td>
-                            <td>{{ $customer->address }}</td>
-                            <td class="">{{ $customer->blood_group }}</td>
-                            <td class="">{{ $customer->hobbies }}</td>
-                            <td class="">{{ $customer->description }}</td>
-                            <td class="wrap col-2">
-                              <a href="{{ $customer->file }}" target="_blank">
+                            <td class="text-nowrap text-center"> {{ $customer->email }}</td>
+                            <td class="text-wrap">{{ $customer->address }}</td>
+                            <td class="text-nowrap text-center">{{ $customer->blood_group }}</td>
+                            <td class="text-nowrap text-center">{{ $customer->hobbies }}</td>
+                            <td class="text-wrap">{{ $customer->description }}</td>
+                            <td class="text-nowrap">
+                              <a href="{{ $customer->file }}" target="_blank" class="file">
                               View file
                               </a>
                           </td>
@@ -85,24 +82,21 @@
                               </a>
                               }
                               @endif --}}
-                            <th scope="col">
-                                <a href="{{ url('/restore') }}/{{ $customer->id }}">Restore
+                            <td scope="col" class="text-nowrap">
+                                <a class="me-1 restore" href="{{ url('/restore') }}/{{ $customer->id }}">Restore
                                 </a>
-                            </th>
-                            <th scope="col">
-                                <a href="{{ route('customer.deleteForced', ['id' => $customer->id]) }}" id="delete">Delete
+                            {{-- </td>
+                            <td scope="col"> --}}
+                                <a class="delete" href="{{ route('customer.deleteForced', ['id' => $customer->id]) }}" id="delete">Delete
                                 </a>
-                            </th>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
         </div>
-        <div class="col-2">
         </div>
-
-
     </main>
     <footer>
         <!-- place footer here -->

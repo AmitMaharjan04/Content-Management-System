@@ -1,10 +1,11 @@
-#selectTag{
+/* to make these 2 fit in single row/block */
+#bloodgroup{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-#selectLabel{
+#bloodLabel{
     margin-right: 315px;
     white-space: nowrap;
 }

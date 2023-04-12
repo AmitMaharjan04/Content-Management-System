@@ -19,11 +19,6 @@
     <main>
         <div class="main">
             <label class="login-name">Login</label>
-            {{-- <div  id="messages" class="hide" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <div id="messages_content"></div>
-              </div> --}}
-
             {{-- <form class="px-4 py-3 " action="{{url('/')}}" method="post" id="formLogin"> --}}
             <form class="main-form " action="{{ url('/') }}" method="post" id="formLogin">
                 @csrf
@@ -41,16 +36,13 @@
                 <div class="form-section">
                     <label for="" class="label-password">Password</label>
                     <input type="password" name="password" class="form-section-password" id="password1">
-                    {{-- <span class="error">This field is required</span> --}}
                     <div class="alert alert-danger" id="errorPassword" hidden></div>
                     @if ($errors->has('password'))
                         <div class="alert alert-danger">
                             {{ $errors->first('password') }}
                         </div>
-                        {{-- alert alert-danger col-8 d-flex d-inline-flex h-100 justify-content-center --}}
                     @endif
                 </div>
-                {{-- <input type="submit" class="btn btn-primary" value="Login"> --}}
                 <div class="buttons">
                     <input type="submit" class="btn" value="Login">
                     <a href="{{ url('/') }}/register" class="btn2">
@@ -60,7 +52,6 @@
             </form>
             <div class="formerror"></div>
         </div>
-
     </main>
     <footer>
         <div class="row">
@@ -82,6 +73,17 @@
                         {{ session('success') }}
                         <script>
                             var errorDiv = document.getElementById("registered");
+                            setTimeout(function() {
+                                errorDiv.parentNode.removeChild(errorDiv);
+                            }, 2000);
+                        </script>
+                    </div>
+                @endif
+                @if (session()->has('unauthorized'))
+                    <div class="alert alert-danger col-8 d-flex  justify-content-center" id="unauthorized">
+                        {{ session('unauthorized') }}
+                        <script>
+                            var errorDiv = document.getElementById("unauthorized");
                             setTimeout(function() {
                                 errorDiv.parentNode.removeChild(errorDiv);
                             }, 2000);

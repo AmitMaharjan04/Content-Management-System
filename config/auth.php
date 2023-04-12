@@ -39,7 +39,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',// default users
+            'provider' => 'custom_provider',// default users
             // 'provider' => 'custom_provider',// default users
         ],
         'api' => [
@@ -79,10 +79,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        // 'custom_provider' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\AdminLogin::class,
-        // ],
+        'custom_provider' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\AdminLogin::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

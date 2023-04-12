@@ -11,5 +11,5 @@ class AdminLogin extends Model implements Authenticatable
 {
     use AuthenticableTrait;
     use HasFactory;
-    protected $table="Admin_Login";
+    protected $table="admin_login";
 }

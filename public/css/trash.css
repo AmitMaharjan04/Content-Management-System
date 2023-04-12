@@ -1,0 +1,6 @@
+.table_1{
+    word-break: break-all;
+}
+.file,.restore,.delete{
+    text-decoration: none;
+}
