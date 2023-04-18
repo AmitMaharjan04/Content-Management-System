@@ -21,6 +21,7 @@ $(document).ready(function () {
       // alert('Cant import');
       return false;
     }
+    
     this.submit();
   });
 });

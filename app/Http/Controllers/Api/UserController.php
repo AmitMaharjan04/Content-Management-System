@@ -9,7 +9,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Facades\Crypt;
+use App\Entities\Queries;
+use App\Http\Helper\ResponseCode;
+use App\Http\Helpers\ResponseCode as HelpersResponseCode;
+use App\Repositories\Repository;
 
 class UserController extends Controller
 {
@@ -17,19 +24,41 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public  $username;
+    public function __construct()
+    {
+        // $this->middleware('auth:api', ['except' => ['login']]);
+    }
     public function index()
     {
-        $users= User::all();
-        if(count($users)>0){
-            return response()->json([
-                'message'=> count($users) . '  '. 'found',
-                'data' => $users
-            ], 200);
-        }else{
-            return response()->json([
-                'message'=> count($users) . '  '. 'found'
-            ],200);
-        }
+        $response=Repository::showAll();
+        return response()->json($response);
+        // $token = JWTAuth::getToken();
+        // $currentUser = JWTAuth::user();
+        // // $superAdmin = User::select('email')->orderBy('id')->first();
+        // $superAdmin = Queries::showFirstEmail();
+        // if ($currentUser->email == $superAdmin->email) {
+        //     // $users = User::all();
+        //     $users = Queries::showAll();
+        //     if (count($users) > 0) {
+        //         $seconds = JWTAuth::getPayload($token)->get('exp') - time();
+        //         $response=ResponseCode::getData($users,$seconds);
+        //         return response()->json($response);
+        //         // return response()->json([
+        //         //     'time' => JWTAuth::getPayload($token)->get('exp') - time(),
+        //         //     'message' => count($users) . '  ' . 'found',
+        //         //     'data' => $users
+        //         // ], 200);
+        //     } else {
+        //         $response=ResponseCode::notFound($users);
+        //         return response()->json($response);
+        //         // return response()->json([
+        //         //     'message' => count($users) . '  ' . 'found'
+        //         // ], 200);
+        //     }
+        // } else {
+        //     $response=ResponseCode::forbidden("nah u not the one");
+        //     return response()->json($response);
+        // }
     }
 
     /**
@@ -38,106 +67,227 @@ class UserController extends Controller
     public function create()
     {
         //
-        
-        
+
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    
+
     public function register(Request $request)
     {
-        $validator=Validator::make($request->all(),[
-            'name'=> ['required'],
-            'email' => ['required','email','unique:users,email'],
-            'password' =>['required','confirmed','min:8'],
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'confirmed', 'min:8'],
             'password_confirmation' => ['required']
         ]);
-        if($validator->fails()){
-            return response()->json($validator->messages(),400);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
         }
-        else{
-
-            $data=[
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password) 
-            ];
-            DB::beginTransaction();
-            try{
-                $user = User::create($data);
-                $token=$user->createToken("auth_token")->accessToken;
-                DB::commit();
-            }catch(\Exception $e){ 
-                DB::rollback();
-                // p($e->getMessage());
-                $user=null;
-            }
-            if($user!=null){
-                return response()->json([
-                    'token' => $token,
-                    'name' =>$user->name,
-                    'message' => "User created successfully"
-                ],200);
-            }
-            else{
-                return response()->json([
-                    'message'=>'Internal issues found'
-                ],500);
-            }
-        }
-        
+        $user=[
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>$request->password,
+        ];
+        $response=Repository::register($user);
+        return response()->json($response);
+            // $user = new User();
+            // $user->name = $request->name;
+            // $user->email = $request->email;
+            // $user->password = Hash::make($request->password);
+            // $user->save();
+            // if ($user != null) {
+            //     return response()->json([
+            //         'name' => $user->name,
+            //         'message' => "User created successfully"
+            //     ], 200);
+            // } else {
+            //     return response()->json([
+            //         'message' => 'Internal issues found'
+            //     ], 500);
+            // }
     }
+    // protected function respondWithToken($token)
+    // {
+    //     // $token = JWTAuth::parseToken()->getToken();
 
-    public function login(Request $request){
-        $validator=Validator::make($request->all(),[
-            'email' => ['required','email'],
-            'password' =>['required'],
+    //     // // Get the payload data
+    //     // $payload = JWTAuth::decode($token)->payload();
+
+    //     // // Get all the data from the payload as an array
+    //     // $data = $payload->toArray();
+    //     // return response()->json([
+    //     //     'message' => $data,
+    //     // ], 200);
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth()->factory()->getTTL() * 60,
+    //         'status' => 1
+    //     ]);
+    // }
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
-        if($validator->fails()){
-            return response()->json($validator->messages(),400);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
         }
-        else{
-            $user = User::where('email', $request['email'])->first();
+        $credentials = $request->only('email', 'password');
+        $response=Repository::login($credentials);
+        return response()->json($response);
+        // //start
+        // if (!$token = JWTAuth::attempt($credentials)) {
+        //     return response()->json(['Error' => 'Incorrect email or password'], 400);
+        // }
 
-    if ($user && Hash::check($request['password'], $user->password)) {
-        // User credentials are valid
-        $token=$user->createToken("auth_token")->accessToken;
-        // $this->username=$user->name;
-        return response()->json([
-            'token' => $token,
-            // 'name' => $username,
-            'message' => "logged in successfully",
-            'user' => $user]);
-            
-    } else {
-        // User credentials are invalid
-        return response()->json(['message' => 'Invalid credentials'], 401);
+        // // $user = JWTAuth::user();
+        // // $payload = [
+        // //     'sub' => $user->id,
+        // //     'name' => $user->name,
+        // //     'email' => $user->email,
+        // // ];
+        //     $token=JWTAuth::claims(['foo'=>'bar'])->attempt($credentials);;
+        // // Generate the JWT token with the user information
+        // // $token = JWTAuth::claims($payload)->attempt($credentials);
+        // // $token=Crypt::encryptString($token);
+        // return response()->json($token,201);
+        // //end
+
+
+        // $credentials = $request->only('email', 'password');
+        // try {
+        //     if (!$token = JWTAuth::attempt($credentials)) {
+        //         // if (!$token = auth()->attempt($credentials)) {
+        //         return response()->json([
+        //             'message' => 'Invalid credentials',
+        //             'status' => 0,
+        //         ], 401);
+        //     }
+        // } catch (JWTException $e) {
+        //     return response()->json([
+        //         'message' => 'Could not create token',
+        //         'status' => 0
+        //     ], 500);
+        // }
+        // // return response()->json([
+        // //     'message' => $token,
+        // // ], 401);
+        // return $this->respondWithToken($token);
+        // return response()->json($credentials);
+        // return response()->json([
+        //     'token' => $token,
+        //     'status' => 1
+        // ], 200);
+
+        // $validator = Validator::make($request->all(), [
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json($validator->messages(), 400);
+        // } else {
+        //     // $user=User::where();
+        //     $user = User::where('email', $request['email'])->first();
+        //     if($user!=null){
+        //         if ($user && Hash::check($request['password'], $user->password)) {
+        //             // $token = $user->createToken("auth_token")->accessToken;
+
+        //             // $this->username=$user->name;
+        //             return response()->json([
+        //                 // 'token' => $token,
+        //                 // 'name' => $username,
+        //                 'message' => "logged in successfully",
+        //                 'user' => $user
+        //             ]);
+        //         } else {
+        //             // User credentials are invalid
+        //             return response()->json(['message' => 'Invalid credentials'], 401);
+        //         }
+        //     }
+        //     else{
+        //         return response()->json(['message' => 'Invalid credentials'], 401);
+        //     }
+
+        // }
     }
-
-            
-        }
-    }   
+    public function logout()
+    {
+        $response=Repository::logout();
+        return response()->json($response);
+        // auth()->logout();
+        // return response()->json([
+        //     'message' => 'Logged out successfully',
+        //     'status' => 1
+        // ], 200);
+    }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $user=User::find($id);
-    
-        if(!is_null($user)){
-            return response()->json([
-                'message'=>'user found',
-                'status'=>'1',
-                'data' => $user
-            ],200);
-        }else{
-            return response()->json([
-            'message'=>'user not found',
-            'status'=>'0'
-            ],400);
-        }
+        //show current datas in payload of token
+
+        // $payload = auth()->payload();
+        // $name=$payload->get('name'); 
+        // $email=$payload['email']; 
+        // $expiry=$payload('exp');  
+        // return response()->json([
+        //     'name'=>$name,
+        //     'email '=>$email,
+        //     'expiry time'=>$expiry,
+        // ]);
+        $response=Repository::showUserInfo();
+        return response()->json($response);
+        // $token = JWTAuth::getToken();
+        // $mins = JWTAuth::getPayload($token)->get('exp') - time();
+        
+        // $id=JWTAuth::getPayload($token)->get('sub');
+        // $user = User::find($id);
+        // if (!is_null($user)) {
+        //     return response()->json([
+        //         'time left to expire' => $mins,
+        //         'message' => 'user found',
+        //         'status' => '1',
+        //         'data' => $user,
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         'message' => 'user not found',
+        //         'status' => '0'
+        //     ], 400);
+        // }
+        //this is how u check issuer legit?
+        // $issuer = JWTAuth::getPayload($token)->get('iss');
+        // if($issuer!="http://127.0.0.1:8000/api/login"){
+        //     return response()->json("u gae");
+        // }
+        // else{
+        //     return response()->json("u coo");
+        // }
+        $token = JWTAuth::parseToken()->getToken();
+
+        // Decode the token and get the user information from the payload
+        // $user = JWTAuth::decode($token->get())->getClaim('name');
+        $payload = JWTAuth::decode($token)->payload();
+
+        // Get all the data from the payload as an array
+        $data = $payload->toArray();
+        return response()->json([
+            'message' => $data,
+        ], 200);
+        return response()->json(compact('user'));
+
+        // $user2 = auth()->user();
+
+        // return response()->json([
+        //     'msg' => $user2,
+        // ]);
+
     }
 
     /**
@@ -153,47 +303,49 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user=User::find($id);
-        if(is_null($user)){
-            return response()->json([
-                'message'=>'User doesnt exist',
-                'status'=>0
-            ],200);
-        }else{
-            DB::beginTransaction();
-            try{
-                $user->name=$request['name'];
-                $user->email=$request['email'];
-                $user->save();
-                DB::commit();
-            }catch(\Exception $e){
-                DB::rollBack();
-               $user=null;
-            }
-            if(is_null($user)){
-                return response()->json([
-                    'message'=>'Internal server issue',
-                    'status'=>0,
-                    'error' => $e->getMessage()
-                ],500);
-            }
-            else{
-                return response()->json([
-                    'message'=>'User updated successfully',
-                    'status'=>1
-                ],200);
-            }
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
         }
+        $user=[
+            'name'=>$request->name,
+            'email'=>$request->email,
+        ];
+        $response=Repository::update($user);
+        return response()->json($response);
+        $user = User::find($id);
+        // return response()->json($user);
+        // if ($user == null) {
+        //     return response()->json([
+        //         'message' => 'User doesnt exist',
+        //         'status' => 0
+        //     ], 200);
+        // } else {
+        //     $user->name = $request->name;
+        //     $user->email = $request->email;
+        //     $user->save();
+        //     // return response()->json([
+        //     //     'message' => $request->name,
+        //     //     'status' => $request->email
+        //     // ], 200);
+
+        //     return response()->json([
+        //         'message' => 'User updated successfully',
+        //         'status' => 1
+        //     ], 200);
+        // }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,string $id)
+    public function destroy(Request $request, string $id)
     {
-        return response()->json([
-            'user'=>$request['name']
-        ]);
+        $response=Repository::delete();
+        return response()->json($response);
         // $user=User::find($id);
         // if(is_null($user)){
         //     $response=[
@@ -225,86 +377,57 @@ class UserController extends Controller
         // }
         // return response()->json($response, $resCode);
     }
-    public function changePassword(Request $request,string $id){
-        $user=User::find($id);
-        if(is_null($user)){
-            return response()->json([
-                'message'=>'User doesnt exist',
-                'status'=>0
-            ],404);
+    public function changePassword(Request $request, string $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_password' => ['required'],
+            'confirmed_password' => ['required'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
         }
-        else{
-            // if($user->password == $request['old_password']){
-                if (Hash::check($request['old_password'], $user->password)) {
-                    if($request['new_password'] == $request['confirmed_password']){
-                        DB::beginTransaction();
-                        try{
-                            $user->password=Hash::make($request['new_password']);
-                            $user->save();
-                            DB::commit();
-                        }catch(\Exception $e){
-                            DB::rollBack();
-                            $user=null;
-                        }
-                        // return response()->json([
-                        //     'message'=>'Password and confirm  match succesfully',
-                        //     'status'=>0
-                        // ],200);
-                    }else{
-                        return response()->json([
-                            'message'=>'New password and confirmed password doesnt match',
-                            'status'=>0
-                        ],400);
-                    }
-                }
-                else{
-                    return response()->json([
-                        'message'=>'Old Password doesnt match succesfully',
-                        'status'=>0
-                    ],400);
-                }
-                // if($request['new_password'] == $request['confirmed_password']){
-                //     // DB::beginTransaction();
-                //     // try{
-                //     //     $user->password=$request['new_password'];
-                //     //     $user->save();
-                //     //     DB::commit();
-                //     // }catch(\Exception $e){
-                //     //     DB::rollBack();
-                //     //     $user=null;
-                //     // }
-                //     return response()->json([
-                //         'message'=>'Password and confirm  match succesfully',
-                //         'status'=>0
-                //     ],200);
-                // }else{
-                //     return response()->json([
-                //         'message'=>'New password and confirmed password doesnt match',
-                //         'status'=>0
-                //     ],400);
-                // }
-            // }else{
-            //     return response()->json([
-            //         'message'=>'Old Password is incorrect',
-            //         'status'=>0
-            //     ],400);
-            // }
-            
-        }
-        if(is_null($user)){
-            return response()->json([
-                'message'=>'Internal server issue',
-                'status'=>0
-                // 'error' => $e->getMessage()
-            ],500);
-        }
-        else{
-            return response()->json([
-                'message'=>'User updated successfully',
-                'status'=>1
-            ],200);
-        }
+        $user=[
+            'new_password'=>$request->new_password,
+            'confirmed_password'=>$request->confirmed_password,
+        ];
+
+        $response=Repository::changePassword($user);
+        return response()->json($response);
+        // return response()->json($response->password);
+        // $user = User::find($id);
+        // if (is_null($user)) {
+        //     return response()->json([
+        //         'message' => 'User doesnt exist',
+        //         'status' => 0
+        //     ], 404);
+        // } else {
+        //     // return response()->json($request->old_password);
+        //     // if($user->password == $request['old_password']){
+        //     if (Hash::check($request['old_password'], $user->password)) {
+        //         if ($request['new_password'] == $request['confirmed_password']) {
+                 
+        //             $user->password = Hash::make($request->new_password);
+        //             $user->save();
+        //             return response()->json([
+        //                 'message' => 'Password changed succesfully',
+        //                 'status' => 0
+        //             ], 200);
+        //         } else {
+        //             return response()->json([
+        //                 'message' => 'New password and confirmed password doesnt match',
+        //                 'status' => 0
+        //             ], 400);
+        //         }
+        //     } else {
+        //         return response()->json([
+        //             'message' => 'Old Password doesnt match succesfully',
+        //             'status' => 0
+        //         ], 400);
+        //     }
+
+        // }
     }
+}
     /*public function createBlog(Request $request){
         $user_id = auth()->guard('api')->user()->name;
         // $data = DB::table('users')->where('id', $user_id)->get();
@@ -361,5 +484,4 @@ class UserController extends Controller
         }
     }
     }*/
-
-}
+// }

@@ -2,58 +2,38 @@
 
 namespace Modules\Admin\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Routing\Controller;
-use Illuminate\Session\Store;
 use Illuminate\Http\Request;
 use App\Models\AdminLogin;
 use App\Models\AdminCustomer;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use Illuminate\Contracts\Session\Session as SessionSession;
-use Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Routing\Controller;
+
 
 class AdminController extends Controller
 {
 
     public function index()
     {
-        dump("asd");
         return view('admin::login');
     }
     public function login(Request $request)
     {
-        dump("asd");
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        dump("asd");
+        // new
         if (Auth::attempt($credentials)) {
-            $user = Auth::user(); 
-            // session_start();
-            // $request->session()->put([
-            //     'id' => $user->id,
-            //     'email' => $user->email,
-            //     'name' => "amit"
-            // ]);
-            // dd(Auth::check());
-            // dd(session()->all());
-            // session()->flash('email', $user->email);
-            // $request->session()->save();
-            // dump(session()->get('email'));
-            // return redirect()->intended('/dashboard');
-            Log::channel('custom')->info('Admin logged in',['id'=>$user->id,'email'=>$user->email]);
-           
-            // return redirect()->route('Admin.dashboard')->with('success','Logged in successfully');
-            return redirect('admin/dashboard')->with('success','Logged in successfully');
+            session(['email'=>$request->email]);
+            Log::channel('custom')->info('Admin logged in',['id'=>Auth::user()->id,'email'=>Auth::user()->email]);
+        
+            return redirect('/admin/dashboard')->with('success','Logged in successfully');
         } else {
             return redirect()->back()->with('error','Invalid email or password');
         }
@@ -65,7 +45,6 @@ class AdminController extends Controller
     public function registerStore(Request $request)
     {
         $request->validate([
-            'name' => ['required', ' min:3', ' max:30'],
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
             'password' => ['required ','min:5', ' max:30','regex:/[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}/']
         ], [
@@ -74,58 +53,53 @@ class AdminController extends Controller
         ]);
         $emails = $request->email;
         // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
-        $admin = new User();
-        $emailCheck=User::select('email')->get();
+        $admin = new AdminLogin();
+        dump("here");
+        $emailCheck=AdminLogin::select('email')->get();
         foreach($emailCheck as $email){
             if($email->email==$emails){
+                dump("inside");
                 return redirect()->back()->with('email','Email already registered.');
             }
         }
-        $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         $admin->save();
+
         Log::channel('custom')->info('Admin has been registered',['id'=>$admin->id,'email'=>$admin->email]);
-        return redirect('/')->with('success','User registered successfully');
+        return redirect('/admin')->with('success','User registered successfully');
     }
     public function logout(Request $request)
     {
         $request->session()->flush();
         // $request->session()->regenerate();
-        return redirect('/');
+        return redirect('/admin');
     }
     public function dashboard(Request $request)
     {
-        // if (session()->has('id')==true) {
-        // dump("dashboard");
-        // if ($request->session()->has('id')) {
-        //     dd("have");
-        // }
-        // dd("dont have");
+        // $value = session('email');
+        // dd($value);
         $customer = AdminCustomer::all();
         return view('admin::dashboard',compact('customer'));
-        // }
-        // else{
-        //     return view('admin_login');
-        // }
 
     }
     public function add($id = null)
     {
         if ($id != null) {
             $customer = AdminCustomer::find($id);
-            $url = url('/add') . "/" . $id;
+            $url = url('/admin/add') . "/" . $id;
             $title = "Update Customer";
-            return view('admin_add', compact('url', 'title', 'customer'));
+            return view('admin::add', compact('url', 'title', 'customer'));
         } else {
-            $url = url('/add');
+            $url = url('/admin/add');
             $customer = new AdminCustomer();
             $title = "Customer Registration";
-            return view('admin_add', compact('url', 'title', 'customer'));
+            return view('admin::add', compact('url', 'title', 'customer'));
         }
     }
     public function editStore($id, Request $req)
-    {   //unique:admin_customers,email
+    {   
+        $old=AdminCustomer::find($id);
         $req->validate([
             'name' => ['required', ' min:3', ' max:30'],
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
@@ -135,7 +109,14 @@ class AdminController extends Controller
         ], [
             'email.regex' => 'Please enter a valid email address.'
         ]);
-
+        $uniqueEmailCheck=AdminCustomer::select('email')
+                                        ->where('email','!=',$old->email)
+                                        ->get();
+        foreach($uniqueEmailCheck as $unique){
+            if($req->email==$unique->email){
+                return redirect()->back()->with('aerror','Email already registered.Choose new email');
+            }
+        }
         $hobbies = $req['hobby'];
         $hobby = implode(',', $hobbies);
 
@@ -157,7 +138,7 @@ class AdminController extends Controller
         $customer->description = $req['description'];
         $customer->save();
         Log::channel('custom')->info('Customer has been edited', ['id' => $customer->id,'email'=>$customer->email]);
-        return redirect('/dashboard')->with('edit','Customer edited successfully');
+        return redirect('/admin/dashboard')->with('edit','Customer edited successfully');
     }
     public function store(Request $request)
     {
@@ -187,10 +168,9 @@ class AdminController extends Controller
         $customer->description = $request['description'];
         $customer->blood_group = $request['blood'];
         $customer->hobbies = $hobby;
-
         $customer->save();
         Log::channel('custom')->info('Customer has been added',['id'=>$customer->id,'email'=>$customer->email]);
-        return redirect('/dashboard')->with('add','Customer added successfully');
+        return redirect('/admin/dashboard')->with('add','Customer added successfully');
     }
 
     public function delete($id)
@@ -198,26 +178,26 @@ class AdminController extends Controller
         $customer = AdminCustomer::find($id);
         Log::channel('custom')->info('Customer has been soft deleted',['id'=>$customer->id,'email'=>$customer->email]);
         $customer->delete();
-        return redirect('/dashboard')->with('softDelete','Customer deleted temporarily');
+        return redirect('/admin/dashboard')->with('softDelete','Customer deleted temporarily');
     }
     public function trash()
     {
         $customer = AdminCustomer::onlyTrashed()->get();
-        return view('admin_trash',compact('customer'));
+        return view('admin::trash',compact('customer'));
     }
     public function restore($id)
     {
         $customer = AdminCustomer::withTrashed()->find($id);
         $customer->restore();
         Log::channel('custom')->info('Customer has been restored',['id'=>$customer->id,'email'=>$customer->email]);
-        return redirect('/dashboard')->with('restore','Customer restored successfully');
+        return redirect('/admin/dashboard')->with('restore','Customer restored successfully');
     }
     public function deleteForced($id)
     {
         $customer = AdminCustomer::withTrashed()->find($id);
         $customer->forceDelete();
         Log::channel('custom')->info('Customer has been permanently deleted',['id'=>$customer->id,'email'=>$customer->email]);
-        return redirect('/dashboard')->with('delete','Customer deleted PERMANENTLY');
+        return redirect('/admin/dashboard')->with('delete','Customer deleted PERMANENTLY');
     }
     public function export()
     {
@@ -230,7 +210,6 @@ class AdminController extends Controller
         Excel::import(new UsersImport, $request->file('file'));
         Log::channel('custom')->info('Customers have been added through excel');
         // Excel::import(new UsersImport, $request->file('file')->store('files'));
-
-        return redirect('/dashboard')->with('import', 'File imported and stored in db');
+        return redirect('/admin/dashboard')->with('import', 'File imported and stored in db');
     }
 }

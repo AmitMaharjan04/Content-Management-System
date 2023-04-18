@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/dashboard">Home</a>
+                        <a class="nav-link" href="/admin/dashboard">Home</a>
                     </li>
                 </ul>
             </div>

@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Session;
 use Illuminate\Support\Facades\Log;
@@ -47,27 +48,6 @@ class AdminController extends Controller
     }
     public function registerStore(Request $request)
     {
-        // $request->validate([
-        //     'name' => ['required', ' min:3', ' max:30'],
-        //     'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
-        //     'password' => ['required ','min:5', ' max:30','regex:/[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}/']
-        // ], [
-        //     'email.regex' => 'Please enter a valid email address.',
-        //     'password.regex' => 'Password must contain alpabets,number and alphanumeric keys.',
-        // ]);
-        // $emails = $request->email;
-        // // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
-        // $admin = new User();
-        // $emailCheck=User::select('email')->get();
-        // foreach($emailCheck as $email){
-        //     if($email->email==$emails){
-        //         return redirect()->back()->with('email','Email already registered.');
-        //     }
-        // }
-        // $admin->name = $request->name;
-        // $admin->email = $request->email;
-        // $admin->password = Hash::make($request->password);
-        // $admin->save();
         $request->validate([
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
             'password' => ['required ','min:5', ' max:30','regex:/[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}/']
@@ -78,11 +58,9 @@ class AdminController extends Controller
         $emails = $request->email;
         // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
         $admin = new AdminLogin();
-        dump("here");
         $emailCheck=AdminLogin::select('email')->get();
         foreach($emailCheck as $email){
             if($email->email==$emails){
-                dump("inside");
                 return redirect()->back()->with('email','Email already registered.');
             }
         }
@@ -101,8 +79,6 @@ class AdminController extends Controller
     }
     public function dashboard(Request $request)
     {
-        // $value = session('email');
-        // dd($value);
         $customer = AdminCustomer::all();
         return view('admin_dashboard',compact('customer'));
 
@@ -231,7 +207,20 @@ class AdminController extends Controller
     }
     public function import(Request $request)
     {
-        Excel::import(new UsersImport, $request->file('file'));
+        try{
+            Excel::import(new UsersImport, $request->file('file'));
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+     
+     foreach ($failures as $failure) {
+         $failure->row(); // row that went wrong
+         $failure->attribute(); // either heading key (if using heading row concern) or column index
+         $failure->errors(); // Actual error messages from Laravel validator
+         $failure->values(); // The values of the row that has failed.
+     }
+            // dump("error caught");
+            // return redirect('/dashboard')->with('importError', 'Fail to upload. As file has empty values where there needs data');
+        }
         Log::channel('custom')->info('Customers have been added through excel');
         // Excel::import(new UsersImport, $request->file('file')->store('files'));
         return redirect('/dashboard')->with('import', 'File imported and stored in db');

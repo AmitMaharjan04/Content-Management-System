@@ -123,6 +123,17 @@
                         </script>
                     </div>
                 @endif
+                @if (session()->has('importError'))
+                    <div class="alert alert-danger col-8 d-flex  justify-content-center" id="importError">
+                        {{ session('importError') }}
+                        <script>
+                            var errorDiv = document.getElementById("importError");
+                            setTimeout(function() {
+                                errorDiv.parentNode.removeChild(errorDiv);
+                            }, 2000);
+                        </script>
+                    </div>
+                @endif
             </div>
             <div class="col-2"></div>
         </div>
@@ -158,11 +169,15 @@
                                 <td class="text-nowrap text-center">{{ $customer->email }}</td>
                                 <td class="text-wrap">{{ $customer->address }}</td>
                                 <td class="text-nowrap text-center">{{ $customer->blood_group }}</td>
-                                <td class="text-nowrap text-center">{{ $customer->hobbies }}</td>
+                                <td class="text-nowrap">{{ $customer->hobbies }}</td>
                                 <td class="text-wrap">{{ $customer->description }}</td>
                                 <td class="text-nowrap">
-                                    <a class="file" href="{{ $customer->file }}" target="_blank">View
-                                        file
+                                    <a  class="file" href="{{ $customer->file }}" target="_blank">
+                                        @if($customer->file!=null)
+                                            View file
+                                        @else
+                                        @endif
+                                        
                                     </a>
                                 </td>
                                 <td scope="col" class="text-nowrap">
@@ -192,7 +207,7 @@
                     <div class="mb-3 col-1">
                         <input type="submit" class="btn btn-success" value="Import">
                     </div>
-                    <div class="mb-3 col-2 alert alert-danger text-center" id="msg" hidden>
+                    <div class="mb-3 col-3 alert alert-danger text-center" id="msg" hidden>
                     </div>
                 </div>
             </form>

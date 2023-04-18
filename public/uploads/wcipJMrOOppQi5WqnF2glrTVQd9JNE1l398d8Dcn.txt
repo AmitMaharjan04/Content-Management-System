@@ -1,0 +1,25 @@
+after format-
+0.apache ko config ma php.ini ma ; remove from ;extension=zip and do composer update --ignore-platform-reqs
+1.for network. put personal ip address and other info from the pics
+2. for use of code:
+	composer dump-autoload
+	composer update
+3.for php in pc put php.exe path folder in env variables system
+4. when database is gone after format. -php artisan migrate brings the tables but not the data
+
+
+
+
+git clone
+git status
+git init
+git add . ->tells git to watch all the files in that directory
+git commit -m ""
+git push origin main or do git push -u origin master so that just write git push next time
+git remote add origin //path ->this is before git push if 1st time--> gives reference to push in the github
+git pull origin master
+git branch -d fasdfjk
+
+git branch
+git checkout -b feature-asd-affasdf
+git checkout main 	to change branch

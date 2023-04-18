@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
         // 'passwords' => 'custom_provider',
     ],
@@ -43,7 +43,7 @@ return [
             // 'provider' => 'custom_provider',// default users
         ],
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'jwt',
             'provider' => 'users',
         ], 
         // 'jwt' => [

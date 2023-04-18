@@ -29,16 +29,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/dashboard">Home</a>
+                        <a class="nav-link" href="/admin/dashboard">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/add">Add</a>
+                        <a class="nav-link" href="/admin/add">Add</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/trash">Move to trash</a>
+                        <a class="nav-link" href="/admin/trash">Move to trash</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link logout" href="/logout" id="logout">logout</a>
+                        <a class="nav-link logout" href="/admin/logout" id="logout">logout</a>
                     </li>
                 </ul>
             </div>
@@ -182,11 +182,11 @@
                                 </td>
                                 <th scope="col">
                                     {{-- <a href="{{url('/edit')}}/{{$customer->id}}">Edit --}}
-                                    <a href="{{ url('/add') }}/{{ $customer->id }}">Edit
+                                    <a href="{{ url('/admin/add') }}/{{ $customer->id }}">Edit
                                     </a>
                                 </th>
                                 <th scope="col">
-                                    <a href="{{ route('customer.delete', ['id' => $customer->id]) }}">Trash
+                                    <a href="{{ route('admin.customer.delete', ['id' => $customer->id]) }}">Trash
                                     </a>
                                 </th>
                             </tr>
