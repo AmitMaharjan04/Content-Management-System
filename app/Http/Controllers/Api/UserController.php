@@ -28,37 +28,17 @@ class UserController extends Controller
     {
         // $this->middleware('auth:api', ['except' => ['login']]);
     }
-    public function index()
+    public function index(Request $request)
     {
-        $response=Repository::showAll();
-        return response()->json($response);
-        // $token = JWTAuth::getToken();
-        // $currentUser = JWTAuth::user();
-        // // $superAdmin = User::select('email')->orderBy('id')->first();
-        // $superAdmin = Queries::showFirstEmail();
-        // if ($currentUser->email == $superAdmin->email) {
-        //     // $users = User::all();
-        //     $users = Queries::showAll();
-        //     if (count($users) > 0) {
-        //         $seconds = JWTAuth::getPayload($token)->get('exp') - time();
-        //         $response=ResponseCode::getData($users,$seconds);
-        //         return response()->json($response);
-        //         // return response()->json([
-        //         //     'time' => JWTAuth::getPayload($token)->get('exp') - time(),
-        //         //     'message' => count($users) . '  ' . 'found',
-        //         //     'data' => $users
-        //         // ], 200);
-        //     } else {
-        //         $response=ResponseCode::notFound($users);
-        //         return response()->json($response);
-        //         // return response()->json([
-        //         //     'message' => count($users) . '  ' . 'found'
-        //         // ], 200);
-        //     }
-        // } else {
-        //     $response=ResponseCode::forbidden("nah u not the one");
-        //     return response()->json($response);
-        // }
+        // $response=Repository::showAll($request);
+        // return response()->json($response);
+        $token=JWTAuth::parseToken();
+        return response()->json(JWTAuth::authenticate($token));
+        $id=JWTAuth::getPayload($token)->get('sub');
+        $user=User::find($id);
+        return response(JWTAuth::toUser($token));  //get  current user
+        return response(JWTAuth::fromUser($user));  //get token of current user
+        return response()->json($token);
     }
 
     /**
@@ -67,8 +47,6 @@ class UserController extends Controller
     public function create()
     {
         //
-
-
     }
 
     /**
@@ -93,21 +71,6 @@ class UserController extends Controller
         ];
         $response=Repository::register($user);
         return response()->json($response);
-            // $user = new User();
-            // $user->name = $request->name;
-            // $user->email = $request->email;
-            // $user->password = Hash::make($request->password);
-            // $user->save();
-            // if ($user != null) {
-            //     return response()->json([
-            //         'name' => $user->name,
-            //         'message' => "User created successfully"
-            //     ], 200);
-            // } else {
-            //     return response()->json([
-            //         'message' => 'Internal issues found'
-            //     ], 500);
-            // }
     }
     // protected function respondWithToken($token)
     // {
@@ -130,16 +93,36 @@ class UserController extends Controller
     // }
     public function login(Request $request)
     {
+        // $response=new ResponseCode;
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
+            // $result=$response->errorMessageClient($validator->messages());
+            // return response()->json($result);
+            return response()->json($validator->messages());
         }
+        // $credentials = $request->only('email', 'password');
+        // $obj=new Repository;
+        // $test=$obj->login($request);
+        // if(!$test){
+        //     return response()->json('Incorrect Email or Password');
+        // }
+        // return response()->json('Login successful');
+
+
         $credentials = $request->only('email', 'password');
-        $response=Repository::login($credentials);
-        return response()->json($response);
+        if($token=Auth::attempt($credentials)){
+            return response()->json([
+                'msg' =>'login successful',
+                'token' => $token,
+            ]);
+        }else{
+            return response()->json("invalid credentials");
+        }
+        // $response=Repository::login($credentials);
+        // return response()->json($response);
         // //start
         // if (!$token = JWTAuth::attempt($credentials)) {
         //     return response()->json(['Error' => 'Incorrect email or password'], 400);
@@ -219,16 +202,11 @@ class UserController extends Controller
     {
         $response=Repository::logout();
         return response()->json($response);
-        // auth()->logout();
-        // return response()->json([
-        //     'message' => 'Logged out successfully',
-        //     'status' => 1
-        // ], 200);
     }
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id,Request $request)
     {
         //show current datas in payload of token
 
@@ -241,34 +219,11 @@ class UserController extends Controller
         //     'email '=>$email,
         //     'expiry time'=>$expiry,
         // ]);
-        $response=Repository::showUserInfo();
+        $response=Repository::showUserInfo($request,$id);
         return response()->json($response);
-        // $token = JWTAuth::getToken();
-        // $mins = JWTAuth::getPayload($token)->get('exp') - time();
-        
-        // $id=JWTAuth::getPayload($token)->get('sub');
-        // $user = User::find($id);
-        // if (!is_null($user)) {
-        //     return response()->json([
-        //         'time left to expire' => $mins,
-        //         'message' => 'user found',
-        //         'status' => '1',
-        //         'data' => $user,
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'user not found',
-        //         'status' => '0'
-        //     ], 400);
-        // }
         //this is how u check issuer legit?
         // $issuer = JWTAuth::getPayload($token)->get('iss');
         // if($issuer!="http://127.0.0.1:8000/api/login"){
-        //     return response()->json("u gae");
-        // }
-        // else{
-        //     return response()->json("u coo");
-        // }
         $token = JWTAuth::parseToken()->getToken();
 
         // Decode the token and get the user information from the payload
@@ -313,8 +268,12 @@ class UserController extends Controller
         $user=[
             'name'=>$request->name,
             'email'=>$request->email,
+            'password'=>$request->password,
         ];
-        $response=Repository::update($user);
+        
+        $response=Repository::update($request,$id);
+
+        // $response=Repository::update($user);
         return response()->json($response);
         $user = User::find($id);
         // return response()->json($user);

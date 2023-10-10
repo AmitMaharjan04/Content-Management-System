@@ -69,7 +69,7 @@ class ResponseCode{
 	                  'message' => [$message]
 	                );
 	}
-    public static function errorMessageClient($message, $status='0'){
+    public function errorMessageClient($message, $status='0'){
 		return array(
 	                  "status" => $status,
 	                  'statusCode' => 400,

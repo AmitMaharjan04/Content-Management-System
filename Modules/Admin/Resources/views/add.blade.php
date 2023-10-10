@@ -245,7 +245,7 @@
                 </div>
             @endif --}}
         </div>
-        <div class="form-group row mb-3">
+        <div class="form-group row">
             <div class="col-sm-10">
                 <input type="submit" class="btn btn-primary" value="Submit">
             </div>

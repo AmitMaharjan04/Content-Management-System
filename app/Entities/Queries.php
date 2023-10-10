@@ -12,7 +12,7 @@ class Queries
     public static function showFirstEmail()
     {
         // return User::select('email')->orderBy('id')->first();
-        return User::select('email')->where('email', '=', 'test12345@gmail.com')->first();
+        return User::select('email')->where('email', '=', 'asd@gmail.com')->first();
     }
     public static function showPassword($id){
         $user=User::find($id);

@@ -49,6 +49,8 @@ Route::middleware(['custom'])->group(function () {
         Route::get('/excel', [AdminController::class, 'export'])->name('excel.export');
         Route::post('/excelImport', [AdminController::class, 'import'])->name('excel.import');
         Route::get('/logout', [AdminController::class, 'logout']);
+        Route::get('/admin/dashboard/ajax', [AdminController::class, 'adminAjaxTable']);
+        Route::get('/admin/trash/ajax', [AdminController::class, 'trashAjaxTable']);
 });
 Route::get('/', [AdminController::class, 'index'])->name('login');
 Route::post('/', [AdminController::class, 'login']);

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{{ $title }}</title>
+    <title>{{ $info['title'] }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -43,7 +43,7 @@
             </div>
         @endif
         {!! Form::open([
-            'url' => $url,
+            'url' => $info['url'],
             'method' => 'post',
             'enctype' => 'multipart/form-data',
             'id' => 'formAdd',

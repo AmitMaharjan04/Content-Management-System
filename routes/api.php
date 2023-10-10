@@ -23,16 +23,17 @@ use Illuminate\Support\Facades\Route;
 //Actual API routes of my project
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::get('/user', [UserController::class, 'index']);
 
-Route::middleware('auth:api','refresh.token')->group(function () {
-    Route::get('/user/show/{id}', [UserController::class, 'show']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/user/show/{id}', [UserController::class, 'show']);//get
     Route::delete('/user/delete/{id}', [UserController::class, 'destroy']);
     Route::post('/create-blog', [BlogController::class, 'createBlog']);
     Route::post('user/update/{id}', [UserController::class, 'update']);
     Route::post('change-password/{id}', [UserController::class, 'changePassword']);
     Route::get('/logout',[UserController::class,'logout']);
-    Route::get('/',[UserController::class,'index']);
+    Route::get('/',[UserController::class,'index']);//get
+    Route::get('/user', [UserController::class, 'index']);
 });
 // Route::middleware('auth:api')->group(function(){
 // });

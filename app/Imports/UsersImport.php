@@ -13,7 +13,8 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
 // use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
-class UsersImport implements ToModel,WithUpserts,WithHeadingRow,SkipsEmptyRows,WithValidation
+class UsersImport implements ToModel,WithHeadingRow
+// ,WithUpserts,SkipsEmptyRows,WithValidation
 {
     /**
     * @param array $row
@@ -22,47 +23,47 @@ class UsersImport implements ToModel,WithUpserts,WithHeadingRow,SkipsEmptyRows,W
     */
     use Importable;
 
-    public function uniqueBy()
-    {
-        return 'email';
-    }
-    public function rules(): array
-    {
-        return [
-            'name' => [
-                'required','string',
-            ],
-            // 'gender' => [
-            //     'required',
-            // ],
-            // 'email' => [
-            //     'required','email'
-            // ],
-            // 'address' => [
-            //     'required',
-            // ],
-            // 'hobbies' => [
-            //     'required',
-            // ],
-            // 'blood_group' => [
-            //     'required',
-            // ],
-            // 'description' => [
-            //     'required','min:5','max:10'
-            // ],
-        ];
-    }
+    // public function uniqueBy()
+    // {
+    //     return 'email';
+    // }
+    // public function rules(): array
+    // {
+    //     return [
+    //         'name' => [
+    //             'required','string',
+    //         ],
+    //         // 'gender' => [
+    //         //     'required',
+    //         // ],
+    //         // 'email' => [
+    //         //     'required','email'
+    //         // ],
+    //         // 'address' => [
+    //         //     'required',
+    //         // ],
+    //         // 'hobbies' => [
+    //         //     'required',
+    //         // ],
+    //         // 'blood_group' => [
+    //         //     'required',
+    //         // ],
+    //         // 'description' => [
+    //         //     'required','min:5','max:10'
+    //         // ],
+    //     ];
+    // }
     public function model(array $row)
     {
         return new AdminCustomer([
-            'name' => $row['name']?? null,
-            'gender' => $row['gender']?? null,
-            'email'=> $row['email']?? null, 
-            'address' => $row['address']?? null,
-            'hobbies' =>$row['hobby']?? null,
-            'blood_group' =>$row['blood_group']?? null,
-            'file'=>$row['file']?? null,
-            'description'=>$row['description']?? null,
+            'name' => $row['name'],
+            'gender' => $row['gender'],
+            'email'=> $row['email'], 
+            'address' => $row['address'],
+            'hobbies' =>$row['hobby'],
+            'blood_group' =>$row['blood_group'],
+            'file'=>$row['file'],
+            'description'=>$row['description'],
         ]);
     }
 }

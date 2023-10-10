@@ -1,0 +1,41 @@
+border-color
+class:hover
+class:active is when clicked
+cursor:pointer
+hover,transistion and shadow
+use padding instead of height and weight
+normally web ma align with text so veritcal-align: top matches the buttolns?
+the selector whih is more specifi is more priority like .classname (p) > p tag
+	do live server to work
+	google font
+object fit,object position for img	
+block takes all spaec inline-block(img and input)takes as much as needed and inline(text elements)appears within line
+display:inline-block
+div is block element
+div contains width 100% by default
+images overflow
+display:grid
+grid-template-columns:1fr 1fr 1fr
+column-gap:15px
+row-gap:15px
+display:flex
+flex-direction: row
+justify-content: center/stary/space-between
+align-item:center
+flex-shrink:0 makes the div not shrink at any cost
+flex has default width so to make it shrink width:0
+position:fixed;top/bottom/left/right->no resizeable lai chai width dine not right
+pointer-events:none
+white-space:nowrap
+@media (min-width-:500px) and (max-width:1000px){
+	.video-grid{
+		grid-template-columns:1fr 1fr
+	}
+} or just do 1 at a time
+
+arrow function
+()=>{}
+euta param xa bhaye no need just 
+param =>{}
+if return xa in 1 line no need write
+param =>{ true; } // returns true

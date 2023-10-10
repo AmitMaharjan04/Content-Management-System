@@ -35,7 +35,7 @@
     </header>
     <main class="mt-4">
         <div class="row">
-        <div class="col mx-4">
+        <div class="col mx-4 mb-5">
             <table class="table table-hover table-bordered table_1">
                 <thead class="thead-dark">
                     <tr>
