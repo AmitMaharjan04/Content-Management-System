@@ -16,9 +16,9 @@ class AuthCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Session('email')){
-            return redirect('/')->with('unauthorized','You need to login to access that page.');
-        }
+        // if(!Session('email')){
+        //     return redirect('/')->with('unauthorized','You need to login to access that page.');
+        // }
         return $next($request);
     }
 }

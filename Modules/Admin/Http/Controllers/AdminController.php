@@ -29,9 +29,13 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
         // new
-        if (Auth::attempt($credentials)) {
+        $user = User::where('email',$email)
+                    ->where('password',$password)
+                    ->first();
+        if($user){
+        // if (Auth::attempt($credentials)) {
             session(['email'=>$request->email]);
-            Log::channel('custom')->info('Admin logged in',['id'=>Auth::user()->id,'email'=>Auth::user()->email]);
+            Log::channel('custom')->info('Admin logged in',['id'=>$user->id,'email'=>$user->email]);
         
             return redirect('/admin/dashboard')->with('success','Logged in successfully');
         } else {
@@ -51,15 +55,17 @@ class AdminController extends Controller
             'email.regex' => 'Please enter a valid email address.',
             'password.regex' => 'Password must contain alpabets,number and alphanumeric keys.',
         ]);
-        $emails = $request->email;
+        // $email = $request->email;
         // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
         $admin = new AdminLogin();
         dump("here");
-        $emailCheck=AdminLogin::select('email')->get();
-        foreach($emailCheck as $email){
-            if($email->email==$emails){
-                dump("inside");
-                return redirect()->back()->with('email','Email already registered.');
+        $emails=AdminLogin::select('email')->get();
+        if($emails){
+            foreach($emails as $val){
+                if($val->email==$request->email){
+                    dump("inside");
+                    return redirect()->back()->with('email','Email already registered.');
+                }
             }
         }
         $admin->email = $request->email;
