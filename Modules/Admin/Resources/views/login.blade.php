@@ -19,7 +19,7 @@
     <main>
         <div class="main">
             <label class="login-name">Login</label>
-            <form class="main-form " action="{{ url('/admin') }}" method="post" id="formLogin">
+            <form class="main-form " action="{{ route('admin.login') }}" method="post" id="formLogin">
                 @csrf
                 <div class="form-section">
                     <label for="" class="label-email">Email address</label>
@@ -46,7 +46,7 @@
                 {{-- <input type="submit" class="btn btn-primary" value="Login"> --}}
                 <div class="buttons">
                     <input type="submit" class="btn" value="Login">
-                    <a href="{{ url('/admin') }}/register" class="btn2">
+                    <a href="{{ url('/') }}/register" class="btn2">
                         Register
                     </a>
                 </div>

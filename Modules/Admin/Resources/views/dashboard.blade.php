@@ -55,7 +55,6 @@
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-                @extends('views.flash_messages.sessionMsg')
                 @if (session()->has('success'))
 
                     <div class="alert alert-success col-8 d-flex  justify-content-center" id="success">

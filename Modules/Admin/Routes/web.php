@@ -32,22 +32,22 @@ use Modules\Admin\Http\Controllers\AdminController;
 //         Route::get('/logout', [AdminController::class, 'logout']);
 // });
 
-// Route::prefix('admin')->middleware(['custom'])->group(function () {
+Route::prefix('admin')->middleware(['custom'])->group(function () {
 
-//     Route::get('/dashboard', [AdminController::class, 'dashboard']);
-//         Route::post('/add', [AdminController::class, 'store']);
-//         Route::get('/add/{id?}', [AdminController::class, 'add']);
-//         Route::post('/add/{id?}', [AdminController::class, 'editStore']);
-//         // Route::get('/edit/{id}', [AdminController::class, 'edit']);
-//         // Route::post('/edit/{id}', [AdminController::class, 'editStore']);
-//         Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('admin.customer.delete');
-//         Route::get('/trash', [AdminController::class, 'trash']);
-//         Route::get('/restore/{id}', [AdminController::class, 'restore']);
-//         Route::get('/deleteForced/{id}', [AdminController::class, 'deleteForced'])->name('admin.customer.deleteForced');
-//         Route::get('/excel', [AdminController::class, 'export'])->name('admin.excel.export');
-//         Route::post('/excelImport', [AdminController::class, 'import'])->name('admin.excel.import');
-//         Route::get('/logout', [AdminController::class, 'logout']);
-// });
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::post('/add', [AdminController::class, 'store']);
+        Route::get('/add/{id?}', [AdminController::class, 'add']);
+        Route::post('/add/{id?}', [AdminController::class, 'editStore']);
+        // Route::get('/edit/{id}', [AdminController::class, 'edit']);
+        // Route::post('/edit/{id}', [AdminController::class, 'editStore']);
+        Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('admin.customer.delete');
+        Route::get('/trash', [AdminController::class, 'trash']);
+        Route::get('/restore/{id}', [AdminController::class, 'restore']);
+        Route::get('/deleteForced/{id}', [AdminController::class, 'deleteForced'])->name('admin.customer.deleteForced');
+        Route::get('/excel', [AdminController::class, 'export'])->name('excel.export');
+        Route::post('/excelImport', [AdminController::class, 'import'])->name('excel.import');
+        Route::get('/logout', [AdminController::class, 'logout']);
+});
 // Route::get('/', [AdminController::class, 'index']);
 // Route::post('/', [AdminController::class, 'login']);
 // Route::get('/register', [AdminController::class, 'register']);

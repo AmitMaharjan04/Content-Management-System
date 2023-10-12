@@ -3,8 +3,8 @@
 namespace Modules\Admin\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AdminLogin;
-use App\Models\AdminCustomer;
+use Modules\Admin\Entities\AdminUser;
+use Modules\Admin\Entities\AdminCustomer;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
 use Illuminate\Support\Facades\Auth;
@@ -28,18 +28,19 @@ class AdminController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        // new
-        $user = User::where('email',$email)
-                    ->where('password',$password)
-                    ->first();
-        if($user){
-        // if (Auth::attempt($credentials)) {
-            session(['email'=>$request->email]);
-            Log::channel('custom')->info('Admin logged in',['id'=>$user->id,'email'=>$user->email]);
         
-            return redirect('/admin/dashboard')->with('success','Logged in successfully');
-        } else {
+        $user = AdminUser::where('email',$request->email)
+                        ->first();
+
+        if($user){
+            if (Hash::check($request->password, $user->password)) {
+                session(['email'=>$request->email]);
+                Log::channel('custom')->info('Admin logged in',['id'=>$user->id,'email'=>$user->email]);
+            
+                return redirect()->route('admin.dashboard')->with('success','Logged in successfully');
+            } else {
             return redirect()->back()->with('error','Invalid email or password');
+            }
         }
     }
     public function register()
@@ -49,17 +50,17 @@ class AdminController extends Controller
     public function registerStore(Request $request)
     {
         $request->validate([
+            'name' => ['required'],
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
             'password' => ['required ','min:5', ' max:30','regex:/[A-Za-z]{1,}[0-9]{1,}[!@#$%\^\-\.]{1,}/']
         ], [
-            'email.regex' => 'Please enter a valid email address.',
+            'name.required' => 'Please enter name!',
+            'email.regex' => 'Please enter a valid email address!',
             'password.regex' => 'Password must contain alpabets,number and alphanumeric keys.',
         ]);
         // $email = $request->email;
         // $emailRegex= "/[a-zA-Z0-9\.-]+@[a-zA-Z0-9]+[\.-]/i";
-        $admin = new AdminLogin();
-        dump("here");
-        $emails=AdminLogin::select('email')->get();
+        $emails=AdminUser::select('email')->get();
         if($emails){
             foreach($emails as $val){
                 if($val->email==$request->email){
@@ -68,23 +69,22 @@ class AdminController extends Controller
                 }
             }
         }
+        $admin = new AdminUser;
+        $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         $admin->save();
 
         Log::channel('custom')->info('Admin has been registered',['id'=>$admin->id,'email'=>$admin->email]);
-        return redirect('/admin')->with('success','User registered successfully');
+        return redirect('/')->with('success','User registered successfully');
     }
     public function logout(Request $request)
     {
         $request->session()->flush();
-        // $request->session()->regenerate();
-        return redirect('/admin');
+        return redirect('/');
     }
     public function dashboard(Request $request)
     {
-        // $value = session('email');
-        // dd($value);
         $customer = AdminCustomer::all();
         return view('admin::dashboard',compact('customer'));
 
@@ -92,8 +92,8 @@ class AdminController extends Controller
     public function add($id = null)
     {
         if ($id != null) {
-            $customer = AdminCustomer::find($id);
             $url = url('/admin/add') . "/" . $id;
+            $customer = AdminCustomer::find($id);
             $title = "Update Customer";
             return view('admin::add', compact('url', 'title', 'customer'));
         } else {
@@ -105,7 +105,6 @@ class AdminController extends Controller
     }
     public function editStore($id, Request $req)
     {   
-        $old=AdminCustomer::find($id);
         $req->validate([
             'name' => ['required', ' min:3', ' max:30'],
             'email' => ['required ', 'email', 'regex:/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/'],
@@ -115,12 +114,16 @@ class AdminController extends Controller
         ], [
             'email.regex' => 'Please enter a valid email address.'
         ]);
+
+        $old=AdminCustomer::find($id);
         $uniqueEmailCheck=AdminCustomer::select('email')
                                         ->where('email','!=',$old->email)
                                         ->get();
-        foreach($uniqueEmailCheck as $unique){
-            if($req->email==$unique->email){
-                return redirect()->back()->with('aerror','Email already registered.Choose new email');
+        if($uniqueEmailCheck){
+            foreach($uniqueEmailCheck as $unique){
+                if($req->email==$unique->email){
+                    return redirect()->back()->with('aerror','Email already registered.Choose new email');
+                }
             }
         }
         $hobbies = $req['hobby'];

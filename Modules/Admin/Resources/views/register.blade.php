@@ -60,6 +60,9 @@
                     @enderror
             </div>
             <input type="submit" class="btn" value="Register">
+            <div class="mt-3">
+                <a class="color-white" href="{{ url('/')}}" >Got an account? Click here for login</a>
+            </div>
         </form>
 
     </main>

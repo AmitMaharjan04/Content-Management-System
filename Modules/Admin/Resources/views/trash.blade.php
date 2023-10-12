@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/dashboard">Home</a>
+                        <a class="nav-link" href="/admin/dashboard">Home</a>
                     </li>
                 </ul>
             </div>
@@ -80,12 +80,12 @@
                               <a href="{{ $customer->file }}" target="_blank">
                                 <td class="wrap col-2">  View file</td>
                               </a>
-                              }
-                              @endif --}}
+                              }`
+                              @endif --}}`
                             <td scope="col" class="text-nowrap">
-                                <a class="me-1 restore" href="{{ url('/restore') }}/{{ $customer->id }}">Restore
+                                <a class="me-1 restore" href="{{ url('/admin/restore') }}/{{ $customer->id }}">Restore
                                 </a>
-                                <a class="delete" href="{{ route('customer.deleteForced', ['id' => $customer->id]) }}" id="delete">Delete
+                                <a class="delete" href="{{ route('admin.customer.deleteForced', ['id' => $customer->id]) }}" id="delete">Delete
                                 </a>
                             </td>
                         </tr>

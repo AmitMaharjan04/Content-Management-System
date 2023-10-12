@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace Modules\Admin\Repositories;
 
 use Modules\Admin\Entities\AdminUser;
 use Modules\Admin\Entities\AdminCustomer;
@@ -13,10 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Exception;
-use Illuminate\Contracts\Session\Session as SessionSession;
-use Session;
 use Illuminate\Support\Facades\Log;
 use App\Models\Parents;
 use App\Models\Child;

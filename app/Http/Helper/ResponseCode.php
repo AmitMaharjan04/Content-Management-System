@@ -2,34 +2,16 @@
 namespace App\Http\Helper;
 
 class ResponseCode{
-	public static function validationError($message, $status='0'){
+	public static function validationError($message){
 		return array(
-	            	'status'    => $status,
 	            	'statusCode'=> 411,
-	            	'message'   => [$message]
+	            	'message'   => $message
 				);
 	}
 
-	public static function accessDenied($message, $status='0'){
+	public static function unauthorized($message){
 		return array(
-	            	'status'    => $status,
-	            	'statusCode'=> 403,
-	            	'message'   => [$message]
-				);
-	}
-
-	public static function unauthorized($message, $status='0'){
-		return array(
-	            	'status'    => $status,
 	            	'statusCode'=> 401,
-	            	'message'   => [$message]
-				);
-	}
-
-	public static function forbidden($message, $status='0'){
-		return array(
-	            	'status'    => $status,
-	            	'statusCode'=> 403,
 	            	'message'   => [$message]
 				);
 	}
@@ -100,14 +82,6 @@ class ResponseCode{
 	                'statusCode'=> 400,
 	                'message'   => $msg,
 	              );
-	}
-
-	public static function validationErrors($message, $status='0'){
-		return array(
-	            	'status'    => $status,
-	            	'statusCode'=> 411,
-	            	'message'   => $message
-				);
 	}
 
 }
