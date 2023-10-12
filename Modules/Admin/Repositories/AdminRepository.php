@@ -22,25 +22,31 @@ class AdminRepository{
     public function __construct(){
     }
 
-    public function login($credentials,$request){
-        if (Auth::attempt($credentials)) {
-            session(['email'=>$request->email]);
-            Log::channel('custom')->info('Admin logged in',['id'=>Auth::user()->id,'email'=>Auth::user()->email]);
-            return true;    
-        } else {
-           return false;
-         }
+    public function login($request){
+        $user = AdminUser::where('email',$request->email)
+                        ->first();
+
+        if($user){
+            if (Hash::check($request->password, $user->password)) {
+                session(['email'=>$request->email]);
+                Log::channel('custom')->info('Admin logged in',['id'=>$user->id,'email'=>$user->email]);
+                return true;
+            } else {
+                return false;
+            
+            }
+        }
+        return false;
     }
 
     public function register($request){
-        $emails = $request->email;
-        $admin = new AdminUser;
-        $emailCheck=AdminUser::select('email')->get();
-        foreach($emailCheck as $email){
-            if($email->email==$emails){
-                return false;
-            }
+        $email=AdminUser::where('email',$request->email)->exists();
+        if($email){
+            return false;
         }
+
+        $admin = new AdminUser;
+        $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         $admin->save();
@@ -50,68 +56,43 @@ class AdminRepository{
     
     }
 
-    public function dashboard(){
-        return AdminCustomer::all();
-    }
-
-    public function addPage($id){
-        if ($id != null) {
-            $customer = AdminCustomer::find($id);
-            $url = url('/add') . "/" . $id;
-            $title = "Update Customer";
-            $info=array(
-                // 'customer' => $customer,
-                'url' => $url,
-                'title' => $title,
-            );
-            return [$info , $customer];    //try return add;
-        } else {
-            $url = url('/add');
-            $customer = new AdminCustomer();
-            $title = "Customer Registration";
-            $info=array(
-                // 'customer' => $customer,
-                'url' => $url,
-                'title' => $title,
-            );
-            return [$info , $customer];    //try return edit; }
-    }
-}
-    public function editStore($id,$request){
+    public function edit($id,$req){
         $old=AdminCustomer::find($id);
         $uniqueEmailCheck=AdminCustomer::select('email')
                                         ->where('email','!=',$old->email)
                                         ->get();
-        foreach($uniqueEmailCheck as $unique){
-            if($request->email==$unique->email){
-                return false;
+        if($uniqueEmailCheck){
+            foreach($uniqueEmailCheck as $unique){
+                if($req->email==$unique->email){
+                    return false;
+                }
             }
         }
-        $hobbies = $request['hobby'];
+        $hobbies = $req['hobby'];
         $hobby = implode(',', $hobbies);
 
         $customer = AdminCustomer::find($id);
-        if ($request->file('file')) {
-            $file = $request->file('file');
+        if ($req->file('file')) {
+            $file = $req->file('file');
             $filename = $file->hashName();
             $location = 'uploads';
             $file->move($location, $filename);
             $filepath = url('uploads/' . $filename);
             $customer->file = $filepath;
         }
-        $customer->name = $request['name'];
-        $customer->gender = $request['gender'];
-        $customer->email = $request['email'];
-        $customer->address = $request['address'];
-        $customer->blood_group = $request['blood'];
+        $customer->name = $req['name'];
+        $customer->gender = $req['gender'];
+        $customer->email = $req['email'];
+        $customer->address = $req['address'];
+        $customer->blood_group = $req['blood'];
         $customer->hobbies = $hobby;
-        $customer->description = $request['description'];
+        $customer->description = $req['description'];
         $customer->save();
         Log::channel('custom')->info('Customer has been edited', ['id' => $customer->id,'email'=>$customer->email]);
         return true;
     }
 
-    public function addStore($request){
+    public function add($request){
         $selects = $request['hobby'];
         $hobby = implode(",", $selects);
 
@@ -159,22 +140,9 @@ class AdminRepository{
         Log::channel('custom')->info('Customer has been permanently deleted',['id'=>$customer->id,'email'=>$customer->email]);
         return true;
     }
-    public function adminAjaxTable(){
-        $customer=AdminCustomer::all();
-        return $customer;
-    }
-    public function trashAjaxTable(){
-        $customer= AdminCustomer::onlyTrashed()->get();
-        return $customer;
-    }
-    public function export(){
-        Log::channel('custom')->info('Customers information have been exported');
-        return Excel::download(new UsersExport, 'users.xlsx');
-    }
 
     public function import($request){
         try{
-            // dd("here");
             Excel::import(new UsersImport, $request->file('file'));
         }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
             $failures = $e->failures();
