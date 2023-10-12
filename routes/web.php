@@ -35,36 +35,7 @@ use Illuminate\Support\Facades\Auth;
 
 //actual URLS of my project
 
-// Route::middleware(['custom'])->group(function () {
-
-//     Route::get('/dashboard', [AdminController::class, 'dashboard']);
-//         Route::post('/add', [AdminController::class, 'store']);
-//         Route::get('/add/{id?}', [AdminController::class, 'add']);
-//         Route::post('/add/{id?}', [AdminController::class, 'editStore']);
-//         // Route::get('/edit/{id}', [AdminController::class, 'edit']);
-//         // Route::post('/edit/{id}', [AdminController::class, 'editStore']);
-//         Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('customer.delete');
-//         Route::get('/trash', [AdminController::class, 'trash']);
-//         Route::get('/restore/{id}', [AdminController::class, 'restore']);
-//         Route::get('/deleteForced/{id}', [AdminController::class, 'deleteForced'])->name('customer.deleteForced');
-//         Route::get('/excel', [AdminController::class, 'export'])->name('excel.export');
-//         Route::post('/excelImport', [AdminController::class, 'import'])->name('excel.import');
-//         Route::get('/logout', [AdminController::class, 'logout']);
-//         Route::get('/admin/dashboard/ajax', [AdminController::class, 'adminAjaxTable']);
-//         Route::get('/admin/trash/ajax', [AdminController::class, 'trashAjaxTable']);
-// });
 Route::get('/', [AdminController::class, 'index'])->name('login');
 Route::post('/', [AdminController::class, 'login'])->name('admin.login');
 Route::get('/register', [AdminController::class, 'register']);
 Route::post('/register', [AdminController::class, 'registerStore']);
-// Route::get('/dashboard',[AdminController::class,'dashboard'])->middleware('auth');
-// Route::post('/add',[AdminController::class,'store']);
-// Route::get('/add',[AdminController::class,'add']);
-// Route::get('/edit/{id}',[AdminController::class,'edit']);
-// Route::post('/edit/{id}',[AdminController::class,'editStore']);
-// Route::get('/delete/{id}',[AdminController::class,'delete'])->name('customer.delete');
-// Route::get('/trash',[AdminController::class,'trash']);
-// Route::get('/restore/{id}',[AdminController::class,'restore']);
-// Route::get('/deleteForced/{id}',[AdminController::class,'deleteForced'])->name('customer.deleteForced');
-// Route::get('/excel',[AdminController::class,'export'])->name('excel.export');
-// Route::get('/logout',[AdminController::class,'logout']);

@@ -35,23 +35,13 @@ class Repository
             }
         }
         return false;
-        //end
+        
         $resCode = new ResponseCode;
         if (!$token = JWTAuth::attempt($credentials)) {
 
             return $resCode->loginFailure("Incorrect Email or Password");
         }
         return $resCode->loginSuccessful("Login Successful", $token);
-    }
-
-    public static function logout()
-    {
-        try {
-            auth()->logout();
-            return ResponseCode::successMessage("Logout successful");
-        } catch (Exception $e) {
-            return ResponseCode::errorMessage("Failure to logout");
-        }
     }
 
     public static function showUserInfo($request, $id)

@@ -10,6 +10,6 @@ class AdminCustomer extends Model
 {
     use SoftDeletes;
     protected $table = 'admin_customers';
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'gender', 'email', 'address', 'blood_group', 'file', 'description', 'hobbies'];
     
 }

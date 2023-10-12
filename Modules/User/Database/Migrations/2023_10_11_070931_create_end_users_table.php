@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('end_users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('gender',['M','F','O']);
             $table->string('email');
-            $table->text('address');
+            $table->string('password');
             $table->timestamps();
             $table->softDeletes();
         });

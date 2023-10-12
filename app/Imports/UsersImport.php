@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\AdminCustomer;
+use Modules\Admin\Entities\AdminCustomer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithUpserts;
@@ -60,10 +60,10 @@ class UsersImport implements ToModel,WithHeadingRow
             'gender' => $row['gender'],
             'email'=> $row['email'], 
             'address' => $row['address'],
-            'hobbies' =>$row['hobby'],
             'blood_group' =>$row['blood_group'],
-            'file'=>$row['file'],
+            'hobbies' =>$row['hobbies'],
             'description'=>$row['description'],
+            'file'=>$row['file'],
         ]);
     }
 }

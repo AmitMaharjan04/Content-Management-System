@@ -20,10 +20,12 @@ class AdminController extends Controller
     {
         $this->adminRepo = new AdminRepository;
     }
+    
     public function index()
     {
         return view('admin::login');
     }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -37,10 +39,12 @@ class AdminController extends Controller
         return redirect()->back()->with('error','Invalid email or password');
         
     }
+
     public function register()
     {
         return view('admin::register');
     }
+
     public function registerStore(Request $request)
     {
         $request->validate([
@@ -59,17 +63,20 @@ class AdminController extends Controller
         
         return redirect()->back()->with('email','Email already registered.');
     }
+
     public function logout(Request $request)
     {
         $request->session()->flush();
         return redirect('/');
     }
+
     public function dashboard(Request $request)
     {
         $customer = AdminCustomer::all();
         return view('admin::dashboard',compact('customer'));
 
     }
+
     public function add($id = null)
     {
         if ($id != null) {
@@ -84,6 +91,7 @@ class AdminController extends Controller
             return view('admin::add', compact('url', 'title', 'customer'));
         }
     }
+
     public function editStore($id, Request $req)
     {   
         $req->validate([
@@ -99,10 +107,10 @@ class AdminController extends Controller
         $result = $this->adminRepo->edit($id,$req);
         if($result)
             return redirect('/admin/dashboard')->with('edit','Customer edited successfully');
-                
+
         return redirect()->back()->with('aerror','Email already registered.Choose new email');
-        
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -124,29 +132,33 @@ class AdminController extends Controller
         if($result)
             return redirect('/admin/dashboard')->with('softDelete','Customer deleted temporarily');
     }
+
     public function trash()
     {
         $customer = $this->adminRepo->trash();
         return view('admin::trash',compact('customer'));
     }
+
     public function restore($id)
     {
         $result = $this->adminRepo->restore($id);
         if($result)
             return redirect('/admin/dashboard')->with('restore','Customer restored successfully');
     }
+
     public function deleteForced($id)
     {
         $result = $this->adminRepo->deleteForced($id);
         if($result)
             return redirect('/admin/dashboard')->with('delete','Customer deleted PERMANENTLY!!');
     }
+
     public function export()
     {
         Log::channel('custom')->info('Customers information have been exported');
         return Excel::download(new UsersExport, 'users.xlsx');
-        
     }
+
     public function import(Request $request)
     {
         Excel::import(new UsersImport, $request->file('file'));

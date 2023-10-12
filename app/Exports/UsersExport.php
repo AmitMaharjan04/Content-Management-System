@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\AdminCustomer;
+use Modules\Admin\Entities\AdminCustomer;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -51,7 +51,11 @@ class UsersExport implements FromCollection,WithHeadings,WithColumnWidths,WithSt
             'Name' =>$customer->name,
             'Gender' => $customer->gender,
             'Email' => $customer->email,
-            'Address' => $customer->address
+            'Address' => $customer->address,
+            'Blood Group' => $customer->blood_group,
+            'Hobbies' => $customer->hobbies,
+            'Description' => $customer->description,
+            'File' => $customer->file
         );
        }
        return collect($data_array);
@@ -59,6 +63,6 @@ class UsersExport implements FromCollection,WithHeadings,WithColumnWidths,WithSt
     }
     public function headings(): array
     {
-        return ['Name', 'Gender','Email','Address'];
+        return ['Name', 'Gender','Email','Address','Blood Group','Hobbies','Description','File'];
     }
 }

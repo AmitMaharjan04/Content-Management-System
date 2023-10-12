@@ -24,17 +24,13 @@ class Queries
     }
     public static function create($userInfo)
     {
-        $user = new User();
-        $user->name = $userInfo['name'];
-        $user->email = $userInfo['email'];
-        $user->password = Hash::make($userInfo['password']);
-        $user->save();
+       
         return true;
     }
-    public static function showUser($id)
-    {
-        return User::find($id);
-    }
+    // public static function showUser($id)
+    // {
+    //     return User::find($id);
+    // }
     public static function updateUser($id, $userInfo)
     {
         $user = User::find($id);
